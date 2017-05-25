@@ -32,12 +32,14 @@ public class myGame extends JComponent {
     //Create Colour for tron and clu
     Color clu = new Color(232, 94, 39);
     Color tron = new Color(40, 146, 239);
+    //Create variable for thickness of everything inc. characters
+    int thick = 10;
     //Set variables for tron
-    int tronx = 495;
-    int trony = 495;
+    int tronx = WIDTH - thick;
+    int trony = HEIGHT - thick;
     //Set variable for clu
-    int clux = 5;
-    int cluy = 5;
+    int clux = 0;
+    int cluy = 0;
     //Variables for tron's movement
     boolean tronR = false;
     boolean tronU = false;
@@ -86,24 +88,18 @@ public class myGame extends JComponent {
         g.clearRect(0, 0, 1000, 1000);
 
         // GAME DRAWING GOES HERE
-
         //Create backround for the game
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 1250, 1250);
 
         //Create the character clu
         g.setColor(clu);
-        g.fillRect(clux, cluy, 5, 5);
-        
+        g.fillRect(clux, cluy, thick, thick);
+
         //Create the character tron
         g.setColor(tron);
-        g.fillRect(tronx, trony, 5, 5);
+        g.fillRect(tronx, trony, thick, thick);
         //int tron[] = new int[1000];
-
-
-
-
-
 
         // GAME DRAWING ENDS HERE
     }
@@ -134,44 +130,49 @@ public class myGame extends JComponent {
             // all your game rules and move is done in here
             // GAME LOGIC STARTS HERE
             //Create an array for the tron
-           // int tron[] = new int[1000];
-
-
+            // int tron[] = new int[1000];
             //TRON movement
             //Have the tron move left 5 spaces when left is pressed
-            if (tronL && tronx > 0) {
+            if (tronL && tronx > WIDTH - WIDTH) {
                 tronx = tronx - 5;
+
             }
             //Have the tron move right 5 spaces when right is pressed
-            if (tronR && tronx < 495) {
+            if (tronR && tronx < WIDTH - thick) {
                 tronx = tronx + 5;
+
             }
             //Have the tron move up 5 spaces when up is pressed
-            if (tronU && trony > 0) {
+            if (tronU && trony > HEIGHT - HEIGHT) {
                 trony = trony - 5;
+
             }
             //Have the tron move down 5 spaces when down is pressed
-            if (tronD && trony < 495) {
+            if (tronD && trony < HEIGHT - thick) {
                 trony = trony + 5;
+
             }
             //CLU movement
             //Have the clu move left 5 spaces when left is pressed
-            if (cluL && clux > 0) {
+            if (cluL && clux > WIDTH - WIDTH) {
                 clux = clux - 5;
+
             }
             //Have the clu move right 5 spaces when right is pressed
-            if (cluR && clux < 495) {
+            if (cluR && clux < WIDTH - thick) {
                 clux = clux + 5;
+
             }
             //Have the clu move up 5 spaces when up is pressed
-            if (cluU && cluy > 0) {
+            if (cluU && cluy > HEIGHT - HEIGHT) {
                 cluy = cluy - 5;
+
             }
             //Have the clu move down 5 spaces when down is pressed
-            if (cluD && cluy < 495) {
+            if (cluD && cluy < HEIGHT - thick) {
                 cluy = cluy + 5;
-            }
 
+            }
 
             // GAME LOGIC ENDS HERE 
             // update the drawing (calls paintComponent)
@@ -228,28 +229,53 @@ public class myGame extends JComponent {
             //Use the arrow keys for tron's movement
             if (code == KeyEvent.VK_RIGHT) {
                 tronR = true;
+                tronU = false;
+                tronL = false;
+                tronD = false;
             }
             if (code == KeyEvent.VK_LEFT) {
                 tronL = true;
+                tronR = false;
+                tronU = false;
+                tronD = false;
+
             }
             if (code == KeyEvent.VK_UP) {
                 tronU = true;
+                tronR = false;
+                tronL = false;
+                tronD = false;
             }
             if (code == KeyEvent.VK_DOWN) {
                 tronD = true;
+                tronR = true;
+                tronU = false;
+                tronL = false;
             }
 
             //Use the S,E,D,F keys to move clu
             if (code == KeyEvent.VK_F) {
                 cluR = true;
+                cluU = false;
+                cluL = false;
+                cluD = false;
             }
             if (code == KeyEvent.VK_S) {
+                cluR = false;
+                cluU = false;
                 cluL = true;
+                cluD = false;
             }
             if (code == KeyEvent.VK_E) {
+                cluR = false;
                 cluU = true;
+                cluL = false;
+                cluD = false;
             }
             if (code == KeyEvent.VK_D) {
+                cluR = false;
+                cluU = false;
+                cluL = false;
                 cluD = true;
             }
         }
