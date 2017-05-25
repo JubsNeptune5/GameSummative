@@ -94,9 +94,10 @@ public class myGame extends JComponent {
         //Create the character clu
         g.setColor(clu);
         g.fillRect(clux, cluy, 5, 5);
+        
         //Create the character tron
         g.setColor(tron);
-        g.fillRect(tronx, tronx, 5, 5);
+        g.fillRect(tronx, trony, 5, 5);
         //int tron[] = new int[1000];
 
 
