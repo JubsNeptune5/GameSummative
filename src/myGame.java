@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -12,15 +13,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 /**
- * To make the start of my game
+ * Tron: Two players go head to head to try to trap the other with the trail the
+ * other creates If the one character hits the other character or the walls,
+ * that character looses
  *
  * @author laveh2107
  */
 public class myGame extends JComponent {
 
     // Height and Width of our game
-    static final int WIDTH = 1000;
-    static final int HEIGHT = 800;
+    static final int WIDTH = 400;
+    static final int HEIGHT = 400;
     //Title of the window
     String title = "TRON";
     // sets the framerate and delay for our game
@@ -34,14 +37,14 @@ public class myGame extends JComponent {
     //Create variable for thickness of everything inc. characters
     int thick = 10;
     //Set variables for tron
-    Rectangle Tron = new Rectangle(0, HEIGHT / 2, thick, thick);
+    Rectangle Tron = new Rectangle((thick * 3), HEIGHT / 2, thick, thick);
     //Cretae arrays for tron coordinents
     int tx[] = new int[WIDTH * HEIGHT];
     int ty[] = new int[WIDTH * HEIGHT];
     //Create counter for array
     int ti = 0;
     //Set variable for clu
-    Rectangle Clu = new Rectangle(WIDTH - thick, HEIGHT / 2, thick, thick);
+    Rectangle Clu = new Rectangle(WIDTH - thick * 4, HEIGHT / 2, thick, thick);
     //Create arrays for clu coordinents
     int cx[] = new int[WIDTH * HEIGHT];
     int cy[] = new int[WIDTH * HEIGHT];
@@ -57,8 +60,24 @@ public class myGame extends JComponent {
     boolean cluU = false;
     boolean cluL = false;
     boolean cluD = false;
+    //Create colour for wall outline
+    Color Lukelightsaber = new Color(180, 200, 232);
+    //Variables for the walls
+    Rectangle wallNorth = new Rectangle(0, 0, thick * 2, WIDTH);
+    Rectangle wallEast = new Rectangle(WIDTH - thick * 2, 0, HEIGHT, thick * 2);
+    Rectangle wallSouth = new Rectangle(0, HEIGHT - thick * 2, thick * 2, WIDTH);
+    Rectangle wallWest = new Rectangle(0, 0, HEIGHT, thick * 2);
+    //Create variable for font
+    Font myFont = new Font("Arial", Font.BOLD, 150);
+    //Create variableas for speech
+    int talkTx = -10;
+    int talkTy = -10;
+    int talkCx = -10;
+    int talkCy = -10;
+    //Create a variable for seeing if the collisions are true
+    int True = 0;
 
-    // GAME VARIABLES END HERE   
+    // GAME VARIABLES END HERE      
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
     public myGame() {
@@ -102,6 +121,7 @@ public class myGame extends JComponent {
         //Create the character clu
         g.setColor(clu);
         g.fillRect(Clu.x, Clu.y, Clu.height, Clu.width);
+        //Create shape for the trail of clu
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             g.fillRect(cx[i], cy[i], Clu.height, Clu.width);
         }
@@ -112,6 +132,24 @@ public class myGame extends JComponent {
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             g.fillRect(tx[i], ty[i], Tron.height, Tron.width);
         }
+        //Fill the walls
+//        g.setColor(Color.BLACK);
+//        g.fillRect(wallNorth.x, wallNorth.y, wallNorth.height, wallNorth.width);
+//        g.fillRect(wallSouth.x, wallSouth.y, wallSouth.height, wallSouth.width);
+//        g.fillRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
+//        g.fillRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
+        //Draw the outline
+//        g.setColor(Lukelightsaber);
+//        g.drawRect(wallNorth.x, wallNorth.y, wallNorth.height, wallNorth.width);
+//        g.drawRect(wallSouth.x, wallSouth.y, wallSouth.height, wallSouth.width);
+//        g.drawRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
+//        g.drawRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
+
+        //Create speach to takl to the players
+        //draw winning speech for tron
+        g.drawString("Congratulations Tron, you won!!!", talkTx, talkTy);
+        //draw winning speech of clu
+        g.drawString("Congradulations Clu, you won!!!", talkCx, talkCy);
         // GAME DRAWING ENDS HERE
     }
     // Beets Bears Battlestar galactica
@@ -141,68 +179,89 @@ public class myGame extends JComponent {
 
             // all your game rules and move is done in here
             // GAME LOGIC STARTS HERE
+            //Check to see if there is anycollisions
+            collisionWall();
+            if (True == 1) {
+                done = true;
+            }
             //TRON movement 
             //Have the tron move left 5 spaces when left is pressed
-            if (tronL && Tron.x > WIDTH - WIDTH) {
-                tx[ti] = Tron.x;
-                ty[ti] = Tron.y;
+            if (tronL) {
+                tronTrailAdding();
                 Tron.x = Tron.x - 1;
-                ti++;
+                cluWin();
+                if (True == 1) {
+                    done = true;
+                }
             }
 
             //Have the tron move right thick spaces when right is pressed
-            if (tronR && Tron.x < WIDTH - thick) {
-                tx[ti] = Tron.x;
-                ty[ti] = Tron.y;
+            if (tronR) {
+                tronTrailAdding();
                 Tron.x = Tron.x + 1;
-                ti++;
+                cluWin();
+                if (True == 1) {
+                    done = true;
+                }
             }
             //Have the tron move up thick spaces when up is pressed
-            if (tronU && Tron.y > HEIGHT - HEIGHT) {
-                tx[ti] = Tron.x;
-                ty[ti] = Tron.y;
+            if (tronU) {
+                tronTrailAdding();
                 Tron.y = Tron.y - 1;
-                ti++;
+                cluWin();
+                if (True == 1) {
+                    done = true;
+                }
             }
             //Have the tron move down thick spaces when down is pressed
-            if (tronD && Tron.y < HEIGHT - 1) {
-                tx[ti] = Tron.x;
-                ty[ti] = Tron.y;
+            if (tronD) {
+                tronTrailAdding();
                 Tron.y = Tron.y + 1;
-                ti++;
+                cluWin();
+                if (True == 1) {
+                    done = true;
+                }
             }
 
             //CLU movement
             //Have the clu move left thick spaces when left is pressed
-            if (cluL && Clu.x > WIDTH - WIDTH) {
-                cx[ci] = Clu.x;
-                cy[ci] = Clu.y;
+            if (cluL) {
+                cluTrailAdding();
                 Clu.x = Clu.x - 1;
-                ci++;
-
+                tronWin();
+                if (True == 1) {
+                    done = true;
+                }
             }
             //Have the clu move right thick spaces when right is pressed
-            if (cluR && Clu.x < WIDTH - thick) {
-                cx[ci] = Clu.x;
-                cy[ci] = Clu.y;
+            if (cluR) {
+                cluTrailAdding();
                 Clu.x = Clu.x + 1;
-                ci++;
+                tronWin();
+                if (True == 1) {
+                    done = true;
+                }
             }
             //Have the clu move up thick spaces when up is pressed
-            if (cluU && Clu.y > HEIGHT - HEIGHT) {
-                cx[ci] = Clu.x;
-                cy[ci] = Clu.y;
+            if (cluU) {
+                cluTrailAdding();
                 Clu.y = Clu.y - 1;
-                ci++;
+                tronWin();
+                if (True == 1) {
+                    done = true;
+                }
             }
             //Have the clu move down thick spaces when down is pressed
-            if (cluD && Clu.y < HEIGHT - thick) {
-                cx[ci] = Clu.x;
-                cy[ci] = Clu.y;
+            if (cluD) {
+                cluTrailAdding();
                 Clu.y = Clu.y + 1;
-                ci++;
+                System.out.println("Clu's Y" + Clu.y);
+                tronWin();
+                
+                if (True == 1) {
+                    done = true;
+                }
             }
-
             // GAME LOGIC ENDS HERE 
             // update the drawing (calls paintComponent)
             repaint();
@@ -362,4 +421,74 @@ public class myGame extends JComponent {
         // starts the game loop
         game.run();
     }
+
+    /**
+     * Method that checks if a character hits a wall
+     */
+    public void collisionWall() {
+        //If Tron hits a wall, tron loses and Clu is told that they won
+        for (int i = 0; i <= ci+ti; i++) {
+            if (tx[i] == WIDTH - thick || tx[i] == thick
+                    || ty[i] == wallNorth.y + thick || ty[i] == wallSouth.y + thick) {
+                //Reveal the message that Clu won 
+                talkCx = WIDTH / 2;
+                talkCy = HEIGHT / 2;
+                //Add one to the counter that will end the game
+                True = 1;
+            }
+        }
+        //If Clu hits the wall, clu loses and tron is told he wins
+        for (int i = 0; i <= ci+ti; i++) {
+            if (cx[i] == WIDTH - thick || cx[i] == thick
+                    || cy[i] == wallNorth.y + thick || cy[i] == wallSouth.y + thick) {
+                //Reveal the message that Tron won 
+                talkTx = WIDTH / 2;
+                talkTy = HEIGHT / 2;
+                //Add one to the counter that will end the game
+                True = 1;
+            }
+        }
+    }
+
+    /**
+     * Method to see if Clu hit tron if so, tron won
+     */
+    public void tronWin() {
+       if(Clu.intersects(Tron)){
+           True = 1;
+       }
+    }
+
+    /**
+     * Method to see if Tron hits Clu if so, Clue won
+     */
+    public void cluWin() {
+       if(Tron.intersects(Clu)){
+           True = 1;
+       }
+    }
+
+    /**
+     * Method to set the array attached to clu
+     */
+    public void cluTrailAdding() {
+        if (Clu.x > 0 && Clu.y > 0) {
+            System.out.println("test");
+            cx[ci] = Clu.x;
+            cy[ci] = Clu.y;
+            ci++;
+        }
+    }
+
+    /**
+     * Method to set array attached to tron
+     */
+    public void tronTrailAdding() {
+        if (Tron.x > 0 && Tron.y > 0) {
+            tx[ti] = Tron.x;
+            ty[ti] = Tron.y;
+            ti++;
+        }
+    }
 }
+//Abadee badee badeee that's all folks
