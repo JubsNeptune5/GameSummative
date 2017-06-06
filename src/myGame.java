@@ -11,6 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  * Tron: Two players go head to head to try to trap the other with the trail the
@@ -78,10 +81,20 @@ public class myGame extends JComponent {
     int True = 0;
     //Create a variable for the speed to make sure that the people always move
     int constantMoveT = 0;
-
+// The arrays are to store all of the animation frames - 6 frames per running animation
+    // The others are for images when not moving
+    BufferedImage[] run = new BufferedImage[6];
+    //BufferedImage[] runRight = new BufferedImage[6];
+    BufferedImage standLeft;
+    BufferedImage standRight;
+    // variables that change frames
+    int frame = 0; // which frame of animation am I drawing
+    int frameDelay = 100; // number of milliseconds between frames
+    long nextFrame = 0; // what time we next change the frame. i.e. now + delay
     // GAME VARIABLES END HERE      
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
+
     public myGame() {
         // creates a windows to show my game
         JFrame frame = new JFrame(title);
@@ -127,9 +140,12 @@ public class myGame extends JComponent {
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             g.fillRect(cx[i], cy[i], Clu.height, Clu.width);
         }
+
         //Create the character tron
         g.setColor(tron);
         g.fillRect(Tron.x, Tron.y, Tron.height, Tron.width);
+        //draw tron as image TEST
+        g.drawImage(run[frame], 0, 0, null);
         //Create shape for tron's trail
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             g.fillRect(tx[i], ty[i], Tron.height, Tron.width);
@@ -149,6 +165,7 @@ public class myGame extends JComponent {
 
         //Create speach to takl to the players
         //draw winning speech for tron
+        g.setColor(tron);
         g.drawString("Congratulations Tron, you won!!!", talkTx, talkTy);
         //draw winning speech of clu
         g.setColor(clu);
@@ -161,6 +178,10 @@ public class myGame extends JComponent {
 
     public void preSetup() {
         // Any of your pre setup before the loop starts should go here
+        for(int i = 0; i < 6; i++){
+            //runRight[i] = loadImage("images/crono_right_run.00" + i + ".gif");
+            run[i] = loadImage("images" + i + ".png");
+         }
     }
 
     // The main game loop
@@ -597,5 +618,22 @@ public class myGame extends JComponent {
             Clu.y = 0;
         }
     }
+    
+    // The filname is used to pass in the EXACT full name of the image from the src folder
+     // i.e.  images/picture.png
+     public BufferedImage loadImage(String filename) {
+         
+         BufferedImage img = null;
+ 
+         try {
+             // use ImageIO to load in an Image
+             // ClassLoader is used to go into a folder in the directory and grab the file
+             img = ImageIO.read(ClassLoader.getSystemResourceAsStream(filename));
+         } catch (IOException ex) {
+             System.err.println(ex.getMessage());
+         }
+ 
+         return img;
+     }
 }
 //Abadee badee badeee that's all folks
