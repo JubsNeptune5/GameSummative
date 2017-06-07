@@ -25,7 +25,7 @@ import javax.imageio.ImageIO;
 public class myGame extends JComponent {
 
     // Height and Width of our game
-    static final int WIDTH = 500;
+    static final int WIDTH = 400;
     static final int HEIGHT = 500;
     //Title of the window
     String title = "TRON";
@@ -34,6 +34,11 @@ public class myGame extends JComponent {
     long desiredFPS = 60;
     long desiredTime = (1000) / desiredFPS;
     // YOUR GAME VARIABLES WOULD GO HERE
+    //Variables for the main menu
+    //VAriables fior the rectangles for the text boxes
+    Rectangle cluTextBox = new Rectangle(0, HEIGHT / 2, WIDTH / 2 - 1, HEIGHT / 2);
+    Rectangle tronTextBox = new Rectangle(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
+    //Variables for the main game
     //Create Colour for tron and clu
     Color clu = new Color(232, 94, 39);
     Color tron = new Color(40, 146, 239);
@@ -63,6 +68,8 @@ public class myGame extends JComponent {
     boolean cluU = false;
     boolean cluL = false;
     boolean cluD = false;
+    //Boolean to activate once the space bar is pressed
+    
     //Create colour for wall outline
     Color Lukelightsaber = new Color(180, 200, 232);
     //Variables for the walls
@@ -70,8 +77,10 @@ public class myGame extends JComponent {
     Rectangle wallEast = new Rectangle(WIDTH - thick * 2, 0, HEIGHT, thick * 2);
     Rectangle wallSouth = new Rectangle(0, HEIGHT - thick * 2, thick * 2, WIDTH);
     Rectangle wallWest = new Rectangle(0, 0, HEIGHT, thick * 2);
-    //Create variable for font
-    Font myFont = new Font("Arial", Font.BOLD, 300);
+    //Create variable for font for title
+    Font mtTitle = new Font("Impact", Font.BOLD, 100);
+    //Create variable for font for text
+    Font myText = new Font("Impact", Font.BOLD, 12);
     //Create variableas for speech
     int talkTx = -10;
     int talkTy = -10;
@@ -79,14 +88,6 @@ public class myGame extends JComponent {
     int talkCy = -10;
     //Create a variable for seeing if the collisions are true
     int True = 0;
-    //Create a variable for the speed to make sure that the people always move
-    int constantMoveT = 0;
-// The arrays are to store all of the animation frames - 6 frames per running animation
-    // The others are for images when not moving
-    BufferedImage[] run = new BufferedImage[6];
-    //BufferedImage[] runRight = new BufferedImage[6];
-    BufferedImage standLeft;
-    BufferedImage standRight;
     // variables that change frames
     int frame = 0; // which frame of animation am I drawing
     int frameDelay = 100; // number of milliseconds between frames
@@ -129,6 +130,8 @@ public class myGame extends JComponent {
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
         // GAME DRAWING GOES HERE
+
+        ///MAIN GAME
         //Create backround for the game
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
@@ -145,7 +148,7 @@ public class myGame extends JComponent {
         g.setColor(tron);
         g.fillRect(Tron.x, Tron.y, Tron.height, Tron.width);
         //draw tron as image TEST
-        g.drawImage(run[frame], 0, 0, null);
+        //g.drawImage(run[frame], 0, 0, null);
         //Create shape for tron's trail
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             g.fillRect(tx[i], ty[i], Tron.height, Tron.width);
@@ -165,11 +168,80 @@ public class myGame extends JComponent {
 
         //Create speach to takl to the players
         //draw winning speech for tron
+        //Set the font
+        g.setFont(myText);
+        //set the colour
         g.setColor(tron);
         g.drawString("Congratulations Tron, you won!!!", talkTx, talkTy);
         //draw winning speech of clu
         g.setColor(clu);
+        //Set the colour
         g.drawString("Congradulations Clu, you won!!!", talkCx, talkCy);
+        //START MENU
+        //Create backround for the main menu
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        //Create coloured text boxes
+        //Clus text box
+        g.setColor(clu);
+        g.drawRect(cluTextBox.x, cluTextBox.y, cluTextBox.width, cluTextBox.height);
+        //Tron's text box
+        g.setColor(tron);
+        g.drawRect(tronTextBox.x, tronTextBox.y, tronTextBox.width, tronTextBox.height);
+
+        //START MENU
+        //Create backround for the main menu
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        //Create coloured text boxes
+        //Clus text box
+        g.setColor(clu);
+        g.drawRect(cluTextBox.x, cluTextBox.y, cluTextBox.width, cluTextBox.height);
+        //Tron's text box
+        g.setColor(tron);
+        g.drawRect(tronTextBox.x, tronTextBox.y, tronTextBox.width, tronTextBox.height);
+
+        //Draw the title
+        g.setFont(mtTitle);
+        g.setColor(tron);
+        g.drawString("TRON", 50, 100);
+
+        //Draw in instructions
+        g.setFont(myText);
+        g.setColor(Color.WHITE);
+        g.drawString("The object of the game is to avoid touching the walls and the trails left behind", 0, 150);
+        g.drawString("by both your opponent and yourself", 0, 200);
+        g.drawString("PRESS SPACE BAR TO CONTINUE", 0, 250);
+
+        //Draw instructions for clu specifically
+        //Draw blocks for letters AWSD
+        g.drawRect(cluTextBox.x + 40, 350, thick * 4, thick * 4);
+        g.drawRect(cluTextBox.x + 80, 350, thick * 4, thick * 4);
+        g.drawRect(cluTextBox.x + 70, 310, thick * 4, thick * 4);
+        g.drawRect(cluTextBox.x + 120, 350, thick * 4, thick * 4);
+        //Draw in the letters to corrispond in the boxes
+        g.setColor(clu);
+        g.drawString("A",cluTextBox.x + 60, 370);
+        g.drawString("S",cluTextBox.x + 100, 370);
+        g.drawString("W",cluTextBox.x + 90, 330);
+        g.drawString("D",cluTextBox.x + 140, 370);
+
+        //Draw instructions for tron specifically
+        //Draw blocks for key pad
+        //Set colour
+        g.setColor(Color.WHITE);
+        g.drawRect(tronTextBox.x + 40, 350, thick * 4, thick * 4);
+        g.drawRect(tronTextBox.x + 80, 350, thick * 4, thick * 4);
+        g.drawRect(tronTextBox.x + 80, 310, thick * 4, thick * 4);
+        g.drawRect(tronTextBox.x + 120, 350, thick * 4, thick * 4);
+        //Draw in the letters to corrispond in the boxes
+        g.setColor(tron);
+        g.drawString("<",tronTextBox.x + 60, 370);
+        g.drawString("!",tronTextBox.x + 100, 370);
+        g.drawString("^",tronTextBox.x + 90, 330);
+        g.drawString(">",tronTextBox.x + 140, 370);
         // GAME DRAWING ENDS HERE
     }
     // Beets Bears Battlestar galactica
@@ -177,15 +249,10 @@ public class myGame extends JComponent {
     // This is run before the game loop begins!
 
     public void preSetup() {
-        // Any of your pre setup before the loop starts should go here
-        for(int i = 0; i < 6; i++){
-            //runRight[i] = loadImage("images/crono_right_run.00" + i + ".gif");
-            run[i] = loadImage("images" + i + ".png");
-         }
     }
-
     // The main game loop
     // In here is where all the logic for my game will go
+
     public void run() {
         // Used to keep track of time used to draw and update the game
         // This is used to limit the framerate later on
@@ -221,6 +288,10 @@ public class myGame extends JComponent {
                 //Method for adding the trail to tron
                 tronTrailAdding();
                 Tron.x = Tron.x - 1;
+
+                //Check if tron collided with clue after he moves
+                cluWin();
+                //If tron did collide, the method will set the true variable as 1, ending the game
                 if (True == 1) {
                     done = true;
                 }
@@ -231,6 +302,10 @@ public class myGame extends JComponent {
                 //Method for adding the trail to tron
                 tronTrailAdding();
                 Tron.x = Tron.x + 1;
+
+                //Check if tron collided with clue after he moves
+                cluWin();
+                //If tron did collide, the method will set the true variable as 1, ending the game
                 if (True == 1) {
                     done = true;
                 }
@@ -240,6 +315,10 @@ public class myGame extends JComponent {
                 //Method for adding the trail to tron
                 tronTrailAdding();
                 Tron.y = Tron.y - 1;
+
+                //Check if tron collided with clue after he moves
+                cluWin();
+                //If tron did collide, the method will set the true variable as 1, ending the game
                 if (True == 1) {
                     done = true;
                 }
@@ -249,15 +328,13 @@ public class myGame extends JComponent {
                 //Method for adding the trail to tron
                 tronTrailAdding();
                 Tron.y = Tron.y + 1;
+
+                //Check if tron collided with clue after he moves
+                cluWin();
+                //If tron did collide, the method will set the true variable as 1, ending the game
                 if (True == 1) {
                     done = true;
                 }
-            }
-            //Check if tron collided with clue after he moves
-            cluWin();
-            //If tron did collide, the method will set the true variable as 1, ending the game
-            if (True == 1) {
-                done = true;
             }
             //CLU movement
             //Have the clu move left thick spaces when left is pressed
@@ -265,30 +342,52 @@ public class myGame extends JComponent {
                 //Method for adding the trail to clu
                 cluTrailAdding();
                 Clu.x = Clu.x - 1;
+
+                //Check if clu collided with tron
+                tronWin();
+                if (True == 1) {
+                    //If clu did collide, the method will set the true variable as 1, ending the game
+                    done = true;
+                }
             }
             //Have the clu move right thick spaces when right is pressed
             if (cluR) {
                 //Method for adding the trail to clu
                 cluTrailAdding();
                 Clu.x = Clu.x + 1;
+
+                //Check if clu collided with tron
+                tronWin();
+                if (True == 1) {
+                    //If clu did collide, the method will set the true variable as 1, ending the game
+                    done = true;
+                }
             }
             //Have the clu move up thick spaces when up is pressed
             if (cluU) {
                 //Method for adding the trail to clu
                 cluTrailAdding();
                 Clu.y = Clu.y - 1;
+
+                //Check if clu collided with tron
+                tronWin();
+                if (True == 1) {
+                    //If clu did collide, the method will set the true variable as 1, ending the game
+                    done = true;
+                }
             }
             //Have the clu move down thick spaces when down is pressed
             if (cluD) {
                 //Method for adding the trail to clu
                 cluTrailAdding();
                 Clu.y = Clu.y + 1;
-            }
-            //Check if clu collided with tron
-            tronWin();
-            if (True == 1) {
-                //If clu did collide, the method will set the true variable as 1, ending the game
-                done = true;
+
+                //Check if clu collided with tron
+                tronWin();
+                if (True == 1) {
+                    //If clu did collide, the method will set the true variable as 1, ending the game
+                    done = true;
+                }
             }
             // GAME LOGIC ENDS HERE 
             // update the drawing (calls paintComponent)
@@ -556,6 +655,8 @@ public class myGame extends JComponent {
                 if (j != i) {
                     //Check if tron of one square is  the same of another, which means he is over lapping
                     if (tx[i] == tx[j] && ty[i] == ty[j]) {
+                        //Method to erase the trail of tron once it dies
+                        tronTrailBeGone();
                         //Increase the variables of the x/y points of the winning speech
                         talkCx = WIDTH / 2 - 100;
                         talkCy = HEIGHT / 2;
@@ -578,6 +679,8 @@ public class myGame extends JComponent {
                 if (j != i) {
                     //Check if clu of one square is the same of another, which means he is over lapping
                     if (cx[i] == cx[j] && cy[i] == cy[j]) {
+                        //Method to erase the trail of clu once it dies
+                        cluTrailBeGone();
                         //Increase the variables of the x/y points of the winning speech
                         talkTx = WIDTH / 2 - 100;
                         talkTy = HEIGHT / 2;
@@ -598,10 +701,11 @@ public class myGame extends JComponent {
             //Move the array position out of the area 
             tx[i] = 0;
             ty[i] = 0;
-            //Move the original start square to 0
-            Tron.x = 0;
-            Tron.y = 0;
         }
+        //Move the original start square to 0
+        Tron.x = 0;
+        Tron.y = 0;
+
     }
 
     /**
@@ -613,27 +717,11 @@ public class myGame extends JComponent {
             //Move the array position out of the area
             cx[i] = 0;
             cy[i] = 0;
-            //Move the original start square to 0
-            Clu.x = 0;
-            Clu.y = 0;
         }
+        //Move the original start square to 0
+        Clu.x = 0;
+        Clu.y = 0;
+
     }
-    
-    // The filname is used to pass in the EXACT full name of the image from the src folder
-     // i.e.  images/picture.png
-     public BufferedImage loadImage(String filename) {
-         
-         BufferedImage img = null;
- 
-         try {
-             // use ImageIO to load in an Image
-             // ClassLoader is used to go into a folder in the directory and grab the file
-             img = ImageIO.read(ClassLoader.getSystemResourceAsStream(filename));
-         } catch (IOException ex) {
-             System.err.println(ex.getMessage());
-         }
- 
-         return img;
-     }
 }
 //Abadee badee badeee that's all folks
