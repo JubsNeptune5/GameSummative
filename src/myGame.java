@@ -69,7 +69,7 @@ public class myGame extends JComponent {
     boolean cluL = false;
     boolean cluD = false;
     //Boolean to activate once the space bar is pressed
-    
+    boolean start = false;
     //Create colour for wall outline
     Color Lukelightsaber = new Color(180, 200, 232);
     //Variables for the walls
@@ -78,20 +78,25 @@ public class myGame extends JComponent {
     Rectangle wallSouth = new Rectangle(0, HEIGHT - thick * 2, thick * 2, WIDTH);
     Rectangle wallWest = new Rectangle(0, 0, HEIGHT, thick * 2);
     //Create variable for font for title
-    Font mtTitle = new Font("Impact", Font.BOLD, 100);
+    Font myTitle = new Font("Impact", Font.BOLD, 100);
     //Create variable for font for text
-    Font myText = new Font("Impact", Font.BOLD, 12);
+    Font myText = new Font("Impact", Font.BOLD, 10);
+    //Create variable for font for Score
+    Font myScore = new Font("Impact", Font.BOLD, 50);
     //Create variableas for speech
-    int talkTx = -10;
-    int talkTy = -10;
-    int talkCx = -10;
-    int talkCy = -10;
+    int talkTx = -1000;
+    int talkTy = -1000;
+    int talkCx = -1000;
+    int talkCy = -1000;
     //Create a variable for seeing if the collisions are true
     int True = 0;
-    // variables that change frames
-    int frame = 0; // which frame of animation am I drawing
-    int frameDelay = 100; // number of milliseconds between frames
-    long nextFrame = 0; // what time we next change the frame. i.e. now + delay
+    //Create variable for the start menu and end menu
+    int titlex = 50;
+    int speechX = 0;
+    int menux = 0;
+    //Create a variable for scores
+    int scoreTron = 0;
+    int scoreClu = 0;
     // GAME VARIABLES END HERE      
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
@@ -166,34 +171,40 @@ public class myGame extends JComponent {
         g.drawRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
         g.drawRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
 
-        //Create speach to takl to the players
+
+        //END game
+        //Create backround for the main menu
+        g.setColor(Color.BLACK);
+        g.fillRect(menux, 0, WIDTH, HEIGHT);
+        //Create speach to talk to the players
         //draw winning speech for tron
         //Set the font
-        g.setFont(myText);
+        g.setFont(myScore);
         //set the colour
         g.setColor(tron);
-        g.drawString("Congratulations Tron, you won!!!", talkTx, talkTy);
+        g.drawString("Congratulations", talkTx, talkTy);
+        g.drawString("Tron, you won!!!", talkTx, talkTy + 50);
         //draw winning speech of clu
         g.setColor(clu);
         //Set the colour
-        g.drawString("Congradulations Clu, you won!!!", talkCx, talkCy);
-        //START MENU
-        //Create backround for the main menu
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        g.drawString("Congratulations", talkCx, talkCy);
+        g.drawString("Clu, you won!!!", talkCx, talkCy + 50);
+        //Create an array for the end design of clu going across the screen
+        for (int i = 0; i < WIDTH; i++) {
+            g.fillRect(cluDesignWinX[i], cluDesignWinX[i], Clu.height, Clu.width);
+        }
 
+
+        //START MENU
         //Create coloured text boxes
-        //Clus text box
+        //Clu's text box
+        g.setFont(myText);
         g.setColor(clu);
         g.drawRect(cluTextBox.x, cluTextBox.y, cluTextBox.width, cluTextBox.height);
         //Tron's text box
         g.setColor(tron);
         g.drawRect(tronTextBox.x, tronTextBox.y, tronTextBox.width, tronTextBox.height);
 
-        //START MENU
-        //Create backround for the main menu
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
 
         //Create coloured text boxes
         //Clus text box
@@ -204,16 +215,16 @@ public class myGame extends JComponent {
         g.drawRect(tronTextBox.x, tronTextBox.y, tronTextBox.width, tronTextBox.height);
 
         //Draw the title
-        g.setFont(mtTitle);
+        g.setFont(myTitle);
         g.setColor(tron);
-        g.drawString("TRON", 50, 100);
+        g.drawString("TRON", titlex, 100);
 
         //Draw in instructions
         g.setFont(myText);
         g.setColor(Color.WHITE);
-        g.drawString("The object of the game is to avoid touching the walls and the trails left behind", 0, 150);
-        g.drawString("by both your opponent and yourself", 0, 200);
-        g.drawString("PRESS SPACE BAR TO CONTINUE", 0, 250);
+        g.drawString("The object of the game is to avoid touching the walls and the trails left behind", speechX, 150);
+        g.drawString("by both your opponent and your own trail", speechX, 200);
+        g.drawString("PRESS SPACE BAR TO CONTINUE", speechX, 250);
 
         //Draw instructions for clu specifically
         //Draw blocks for letters AWSD
@@ -223,10 +234,10 @@ public class myGame extends JComponent {
         g.drawRect(cluTextBox.x + 120, 350, thick * 4, thick * 4);
         //Draw in the letters to corrispond in the boxes
         g.setColor(clu);
-        g.drawString("A",cluTextBox.x + 60, 370);
-        g.drawString("S",cluTextBox.x + 100, 370);
-        g.drawString("W",cluTextBox.x + 90, 330);
-        g.drawString("D",cluTextBox.x + 140, 370);
+        g.drawString("A", cluTextBox.x + 60, 370);
+        g.drawString("S", cluTextBox.x + 100, 370);
+        g.drawString("W", cluTextBox.x + 90, 330);
+        g.drawString("D", cluTextBox.x + 140, 370);
 
         //Draw instructions for tron specifically
         //Draw blocks for key pad
@@ -238,10 +249,10 @@ public class myGame extends JComponent {
         g.drawRect(tronTextBox.x + 120, 350, thick * 4, thick * 4);
         //Draw in the letters to corrispond in the boxes
         g.setColor(tron);
-        g.drawString("<",tronTextBox.x + 60, 370);
-        g.drawString("!",tronTextBox.x + 100, 370);
-        g.drawString("^",tronTextBox.x + 90, 330);
-        g.drawString(">",tronTextBox.x + 140, 370);
+        g.drawString("<", tronTextBox.x + 60, 370);
+        g.drawString("!", tronTextBox.x + 100, 370);
+        g.drawString("^", tronTextBox.x + 90, 330);
+        g.drawString(">", tronTextBox.x + 140, 370);
         // GAME DRAWING ENDS HERE
     }
     // Beets Bears Battlestar galactica
@@ -270,123 +281,135 @@ public class myGame extends JComponent {
 
             // all your game rules and move is done in here
             // GAME LOGIC STARTS HERE
-            //Check to see if there is any collisions
-            //Check if any character collided with the wall
-            collisionWall();
-            //Check if tron touched his own trail
-            tronTouchItself();
-            //Check if clu touched his own trail
-            cluTouchItself();
-            //If loop so that if any of these methods are true then the ifn loop will end the game
-            if (True == 1) {
-                done = true;
-            }
-
-            //TRON movement 
-            //Have the tron move left 5 spaces when left is pressed
-            if (tronL) {
-                //Method for adding the trail to tron
-                tronTrailAdding();
-                Tron.x = Tron.x - 1;
-
-                //Check if tron collided with clue after he moves
-                cluWin();
-                //If tron did collide, the method will set the true variable as 1, ending the game
+            //Once space bar is pressed the game begins
+            if (start == true) {
+                //Move the start menu out of the way
+                //Change the speech quardinents
+                titlex = -1000;
+                speechX = -1000;
+                //Change the backround coorinents
+                menux = -1000;
+                //change the fcoorinantas of the boxes
+                cluTextBox.x = - 1000;
+                tronTextBox.x = -1000;
+                //Check to see if there is any collisions
+                //Check if any character collided with the wall
+                collisionWall();
+                //Check if tron touched his own trail
+                tronTouchItself();
+                //Check if clu touched his own trail
+                cluTouchItself();
+                //If loop so that if any of these methods are true then the ifn loop will end the game
                 if (True == 1) {
                     done = true;
                 }
-            }
 
-            //Have the tron move right thick spaces when right is pressed
-            if (tronR) {
-                //Method for adding the trail to tron
-                tronTrailAdding();
-                Tron.x = Tron.x + 1;
+                //TRON movement 
+                //Have the tron move left 5 spaces when left is pressed
+                if (tronL) {
+                    //Method for adding the trail to tron
+                    tronTrailAdding();
+                    Tron.x = Tron.x - 1;
 
-                //Check if tron collided with clue after he moves
-                cluWin();
-                //If tron did collide, the method will set the true variable as 1, ending the game
-                if (True == 1) {
-                    done = true;
+                    //Check if tron collided with clue after he moves
+                    cluWin();
+                    //If tron did collide, the method will set the true variable as 1, ending the game
+                    if (True == 1) {
+                        done = true;
+                    }
                 }
-            }
-            //Have the tron move up thick spaces when up is pressed
-            if (tronU) {
-                //Method for adding the trail to tron
-                tronTrailAdding();
-                Tron.y = Tron.y - 1;
 
-                //Check if tron collided with clue after he moves
-                cluWin();
-                //If tron did collide, the method will set the true variable as 1, ending the game
-                if (True == 1) {
-                    done = true;
+                //Have the tron move right thick spaces when right is pressed
+                if (tronR) {
+                    //Method for adding the trail to tron
+                    tronTrailAdding();
+                    Tron.x = Tron.x + 1;
+
+                    //Check if tron collided with clue after he moves
+                    cluWin();
+                    //If tron did collide, the method will set the true variable as 1, ending the game
+                    if (True == 1) {
+                        done = true;
+                    }
                 }
-            }
-            //Have the tron move down thick spaces when down is pressed
-            if (tronD) {
-                //Method for adding the trail to tron
-                tronTrailAdding();
-                Tron.y = Tron.y + 1;
+                //Have the tron move up thick spaces when up is pressed
+                if (tronU) {
+                    //Method for adding the trail to tron
+                    tronTrailAdding();
+                    Tron.y = Tron.y - 1;
 
-                //Check if tron collided with clue after he moves
-                cluWin();
-                //If tron did collide, the method will set the true variable as 1, ending the game
-                if (True == 1) {
-                    done = true;
+                    //Check if tron collided with clue after he moves
+                    cluWin();
+                    //If tron did collide, the method will set the true variable as 1, ending the game
+                    if (True == 1) {
+                        done = true;
+                    }
                 }
-            }
-            //CLU movement
-            //Have the clu move left thick spaces when left is pressed
-            if (cluL) {
-                //Method for adding the trail to clu
-                cluTrailAdding();
-                Clu.x = Clu.x - 1;
+                //Have the tron move down thick spaces when down is pressed
+                if (tronD) {
+                    //Method for adding the trail to tron
+                    tronTrailAdding();
+                    Tron.y = Tron.y + 1;
 
-                //Check if clu collided with tron
-                tronWin();
-                if (True == 1) {
-                    //If clu did collide, the method will set the true variable as 1, ending the game
-                    done = true;
+                    //Check if tron collided with clue after he moves
+                    cluWin();
+                    //If tron did collide, the method will set the true variable as 1, ending the game
+                    if (True == 1) {
+                        done = true;
+                    }
                 }
-            }
-            //Have the clu move right thick spaces when right is pressed
-            if (cluR) {
-                //Method for adding the trail to clu
-                cluTrailAdding();
-                Clu.x = Clu.x + 1;
+                //CLU movement
+                //Have the clu move left thick spaces when left is pressed
+                if (cluL) {
+                    //Method for adding the trail to clu
+                    cluTrailAdding();
+                    Clu.x = Clu.x - 1;
 
-                //Check if clu collided with tron
-                tronWin();
-                if (True == 1) {
-                    //If clu did collide, the method will set the true variable as 1, ending the game
-                    done = true;
+                    //Check if clu collided with tron
+                    tronWin();
+                    if (True == 1) {
+                        //If clu did collide, the method will set the true variable as 1, ending the game
+                        done = true;
+                    }
                 }
-            }
-            //Have the clu move up thick spaces when up is pressed
-            if (cluU) {
-                //Method for adding the trail to clu
-                cluTrailAdding();
-                Clu.y = Clu.y - 1;
+                //Have the clu move right thick spaces when right is pressed
+                if (cluR) {
+                    //Method for adding the trail to clu
+                    cluTrailAdding();
+                    Clu.x = Clu.x + 1;
 
-                //Check if clu collided with tron
-                tronWin();
-                if (True == 1) {
-                    //If clu did collide, the method will set the true variable as 1, ending the game
-                    done = true;
+                    //Check if clu collided with tron
+                    tronWin();
+                    if (True == 1) {
+                        //If clu did collide, the method will set the true variable as 1, ending the game
+                        done = true;
+                    }
                 }
-            }
-            //Have the clu move down thick spaces when down is pressed
-            if (cluD) {
-                //Method for adding the trail to clu
-                cluTrailAdding();
-                Clu.y = Clu.y + 1;
+                //Have the clu move up thick spaces when up is pressed
+                if (cluU) {
+                    //Method for adding the trail to clu
+                    cluTrailAdding();
+                    Clu.y = Clu.y - 1;
 
-                //Check if clu collided with tron
-                tronWin();
-                if (True == 1) {
-                    //If clu did collide, the method will set the true variable as 1, ending the game
-                    done = true;
+                    //Check if clu collided with tron
+                    tronWin();
+                    if (True == 1) {
+                        //If clu did collide, the method will set the true variable as 1, ending the game
+                        done = true;
+                    }
+                }
+                //Have the clu move down thick spaces when down is pressed
+                if (cluD) {
+                    //Method for adding the trail to clu
+                    cluTrailAdding();
+                    Clu.y = Clu.y + 1;
+
+                    //Check if clu collided with tron
+                    tronWin();
+                    if (True == 1) {
+                        //If clu did collide, the method will set the true variable as 1, ending the game
+                        done = true;
+                    }
                 }
             }
             // GAME LOGIC ENDS HERE 
@@ -441,6 +464,10 @@ public class myGame extends JComponent {
         public void keyPressed(KeyEvent e) {
             //Intitalize the arrow keys
             int code = e.getKeyCode();
+            //Once the space bar is pressed, the other controls can be
+            if (code == KeyEvent.VK_SPACE) {
+                start = true;
+            }
             //Use the arrow keys for tron's movement
             if (code == KeyEvent.VK_RIGHT) {
                 tronR = true;
@@ -553,13 +580,7 @@ public class myGame extends JComponent {
             //check if the trial hit any part fo the walls
             if (tx[i] == WIDTH - thick || tx[i] == thick
                     || ty[i] == wallNorth.y + thick || ty[i] == wallSouth.y + thick) {
-                //Erase the Trail of tron
-                tronTrailBeGone();
-                //Reveal the message that Clu won 
-                talkCx = WIDTH / 2 - 100;
-                talkCy = HEIGHT / 2;
-                //Add one to the counter that will end the game
-                True = 1;
+                cluEndMenu();
             }
         }
         //If Clu hits the wall, clu loses and tron is told he wins
@@ -567,13 +588,7 @@ public class myGame extends JComponent {
             //check if the trial hit any part fo the walls
             if (cx[i] == WIDTH - thick || cx[i] == thick
                     || cy[i] == wallNorth.y + thick || cy[i] == wallSouth.y + thick) {
-                //Erase the trail of Clu
-                cluTrailBeGone();
-                //Reveal the message that Tron won 
-                talkTx = WIDTH / 2 - 100;
-                talkTy = HEIGHT / 2;
-                //Add one to the counter that will end the game
-                True = 1;
+                tronEndMenu();
             }
         }
     }
@@ -587,13 +602,7 @@ public class myGame extends JComponent {
             for (int j = 0; j < ci; j++) {
                 //Check if tron hit clu at it's x or y point or on the opposite side of where the x or y point is (thick)
                 if ((cx[j] == tx[i] || cx[j] == tx[i] - thick * 2) && (cy[j] == ty[i] || cy[j] == ty[i] - thick)) {
-                    //Method to erase the trail of clu once it dies
-                    cluTrailBeGone();
-                    //Increase the variables of the x/y points of the winning speech
-                    talkTx = WIDTH / 2;
-                    talkTy = HEIGHT / 2;
-                    //Set the variable to be true for the if loop later
-                    True = 1;
+                    tronEndMenu();
                 }
             }
         }
@@ -608,13 +617,7 @@ public class myGame extends JComponent {
             for (int j = 0; j < ti; j++) {
                 //Check if clu hit tron at it's x or y point or on the opposite side of where the x or y point is (thick)
                 if ((cx[i] == tx[j] || cx[i] == tx[j] - thick * 2) && (cy[i] == ty[j] || cy[i] == ty[j] - thick)) {
-                    //Method to erase the trail of tron once it dies
-                    tronTrailBeGone();
-                    //Increase the variables of the x/y points of the winning speech
-                    talkCx = WIDTH / 2 - 100;
-                    talkCy = HEIGHT / 2;
-                    //Set variable to end the game in an if loop later
-                    True = 1;
+                    cluEndMenu();
                 }
             }
         }
@@ -655,13 +658,7 @@ public class myGame extends JComponent {
                 if (j != i) {
                     //Check if tron of one square is  the same of another, which means he is over lapping
                     if (tx[i] == tx[j] && ty[i] == ty[j]) {
-                        //Method to erase the trail of tron once it dies
-                        tronTrailBeGone();
-                        //Increase the variables of the x/y points of the winning speech
-                        talkCx = WIDTH / 2 - 100;
-                        talkCy = HEIGHT / 2;
-                        //Set variable to 1 to end the program in an if loop later 
-                        True = 1;
+                        cluEndMenu();
                     }
                 }
             }
@@ -679,13 +676,7 @@ public class myGame extends JComponent {
                 if (j != i) {
                     //Check if clu of one square is the same of another, which means he is over lapping
                     if (cx[i] == cx[j] && cy[i] == cy[j]) {
-                        //Method to erase the trail of clu once it dies
-                        cluTrailBeGone();
-                        //Increase the variables of the x/y points of the winning speech
-                        talkTx = WIDTH / 2 - 100;
-                        talkTy = HEIGHT / 2;
-                        //Set variable to 1 to end the program in an if loop later 
-                        True = 1;
+                        tronEndMenu();
                     }
                 }
             }
@@ -722,6 +713,35 @@ public class myGame extends JComponent {
         Clu.x = 0;
         Clu.y = 0;
 
+    }
+
+    /**
+     * Method to introduce the end menu of the game if tron wins
+     */
+    public void tronEndMenu() {
+        //Method to erase the trail of clu once it dies
+        cluTrailBeGone();
+        //Increase the variables of the x/y points of the winning speech
+        talkTx = 0;
+        talkTy = HEIGHT / 2;
+        //Increase the backround variable
+        menux = 0;
+        //Set variable to end the game in an if loop later
+        True = 1;
+    }
+    /**
+     * Method to introduce the end menu of the game if clue wins
+     */
+    public void cluEndMenu() {
+        //Method to erase the trail of clu once it dies
+        tronTrailBeGone();
+        //Increase the variables of the x/y points of the winning speech
+        talkCx = 0;
+        talkCy = HEIGHT / 2;
+        //Increase the backround variable
+        menux = 0;
+        //Set variable to end the game in an if loop later
+        True = 1;
     }
 }
 //Abadee badee badeee that's all folks
