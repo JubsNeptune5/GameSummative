@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Scanner;
 import javax.imageio.ImageIO;
 
 /**
@@ -25,7 +26,7 @@ import javax.imageio.ImageIO;
 public class myGame extends JComponent {
 
     // Height and Width of our game
-    static final int WIDTH = 400;
+    static final int WIDTH = 500;
     static final int HEIGHT = 500;
     //Title of the window
     String title = "TRON";
@@ -81,15 +82,17 @@ public class myGame extends JComponent {
     Font myTitle = new Font("Impact", Font.BOLD, 100);
     //Create variable for font for text
     Font myText = new Font("Impact", Font.BOLD, 10);
-    //Create variable for font for Score
-    Font myScore = new Font("Impact", Font.BOLD, 50);
+    //Create variable for font for win speeches
+    Font myWin = new Font("Impact", Font.BOLD, 50);
+    //create avriable for font for score
+    Font myScore = new Font("Impact", Font.BOLD, 30);
+    //create avriable for font for score
+    Font myTalk = new Font("Impact", Font.BOLD, 10);
     //Create variableas for speech
     int talkTx = -1000;
     int talkTy = -1000;
     int talkCx = -1000;
     int talkCy = -1000;
-    //Create a variable for seeing if the collisions are true
-    int True = 0;
     //Create variable for the start menu and end menu
     int titlex = 50;
     int speechX = 0;
@@ -97,6 +100,14 @@ public class myGame extends JComponent {
     //Create a variable for scores
     int scoreTron = 0;
     int scoreClu = 0;
+    //Create sizing variables for the score
+    int scorey = -1000;
+    int scoreClux = 0;
+    int scoreTronx = WIDTH - thick * 2;
+    //initalize the scanner
+    Scanner input = new Scanner(System.in);
+    //Create words for winners
+    String PreviousWinner = "No previuos winner,";
     // GAME VARIABLES END HERE      
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
@@ -152,8 +163,6 @@ public class myGame extends JComponent {
         //Create the character tron
         g.setColor(tron);
         g.fillRect(Tron.x, Tron.y, Tron.height, Tron.width);
-        //draw tron as image TEST
-        //g.drawImage(run[frame], 0, 0, null);
         //Create shape for tron's trail
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             g.fillRect(tx[i], ty[i], Tron.height, Tron.width);
@@ -171,6 +180,13 @@ public class myGame extends JComponent {
         g.drawRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
         g.drawRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
 
+        //Create the wrinting for the score
+        g.setFont(myScore);
+        //Set coplour specifically for clu
+        g.setColor(clu);
+        g.drawString("" + scoreClu, scoreClux, scorey);
+        g.setColor(tron);
+        g.drawString("" + scoreTron, scoreTronx, scorey);
 
         //END game
         //Create backround for the main menu
@@ -179,7 +195,9 @@ public class myGame extends JComponent {
         //Create speach to talk to the players
         //draw winning speech for tron
         //Set the font
-        g.setFont(myScore);
+
+
+        g.setFont(myWin);
         //set the colour
         g.setColor(tron);
         g.drawString("Congratulations", talkTx, talkTy);
@@ -189,12 +207,16 @@ public class myGame extends JComponent {
         //Set the colour
         g.drawString("Congratulations", talkCx, talkCy);
         g.drawString("Clu, you won!!!", talkCx, talkCy + 50);
-        //Create an array for the end design of clu going across the screen
-        for (int i = 0; i < WIDTH; i++) {
-            g.fillRect(cluDesignWinX[i], cluDesignWinX[i], Clu.height, Clu.width);
-        }
-
-
+        //Let the players knwo to restart the game if they want to play 
+        g.setFont(myTalk);
+        g.drawString("press enter to play again", talkCx, talkCy + 100);
+        g.setColor(tron);
+        g.drawString("press enter to play again", talkTx, talkTy + 100);
+        g.drawString("The previous winner is: " + PreviousWinner, talkTx, talkTy + 150);
+        g.drawString("Please enter your name in the java program then press enter", talkTx, talkTy + 200);
+        g.setColor(clu);
+        g.drawString("The previous winner is: " + PreviousWinner, talkCx, talkCy + 150);
+        g.drawString("Please enter your name in the java program then press enter", talkCx, talkCy + 200);
         //START MENU
         //Create coloured text boxes
         //Clu's text box
@@ -204,7 +226,6 @@ public class myGame extends JComponent {
         //Tron's text box
         g.setColor(tron);
         g.drawRect(tronTextBox.x, tronTextBox.y, tronTextBox.width, tronTextBox.height);
-
 
         //Create coloured text boxes
         //Clus text box
@@ -224,7 +245,8 @@ public class myGame extends JComponent {
         g.setColor(Color.WHITE);
         g.drawString("The object of the game is to avoid touching the walls and the trails left behind", speechX, 150);
         g.drawString("by both your opponent and your own trail", speechX, 200);
-        g.drawString("PRESS SPACE BAR TO CONTINUE", speechX, 250);
+        g.drawString("PRESS ENTER KEY TO CONTINUE", speechX, 250);
+
 
         //Draw instructions for clu specifically
         //Draw blocks for letters AWSD
@@ -283,15 +305,6 @@ public class myGame extends JComponent {
             // GAME LOGIC STARTS HERE
             //Once space bar is pressed the game begins
             if (start == true) {
-                //Move the start menu out of the way
-                //Change the speech quardinents
-                titlex = -1000;
-                speechX = -1000;
-                //Change the backround coorinents
-                menux = -1000;
-                //change the fcoorinantas of the boxes
-                cluTextBox.x = - 1000;
-                tronTextBox.x = -1000;
                 //Check to see if there is any collisions
                 //Check if any character collided with the wall
                 collisionWall();
@@ -299,11 +312,6 @@ public class myGame extends JComponent {
                 tronTouchItself();
                 //Check if clu touched his own trail
                 cluTouchItself();
-                //If loop so that if any of these methods are true then the ifn loop will end the game
-                if (True == 1) {
-                    done = true;
-                }
-
                 //TRON movement 
                 //Have the tron move left 5 spaces when left is pressed
                 if (tronL) {
@@ -313,10 +321,6 @@ public class myGame extends JComponent {
 
                     //Check if tron collided with clue after he moves
                     cluWin();
-                    //If tron did collide, the method will set the true variable as 1, ending the game
-                    if (True == 1) {
-                        done = true;
-                    }
                 }
 
                 //Have the tron move right thick spaces when right is pressed
@@ -327,10 +331,7 @@ public class myGame extends JComponent {
 
                     //Check if tron collided with clue after he moves
                     cluWin();
-                    //If tron did collide, the method will set the true variable as 1, ending the game
-                    if (True == 1) {
-                        done = true;
-                    }
+
                 }
                 //Have the tron move up thick spaces when up is pressed
                 if (tronU) {
@@ -340,10 +341,6 @@ public class myGame extends JComponent {
 
                     //Check if tron collided with clue after he moves
                     cluWin();
-                    //If tron did collide, the method will set the true variable as 1, ending the game
-                    if (True == 1) {
-                        done = true;
-                    }
                 }
                 //Have the tron move down thick spaces when down is pressed
                 if (tronD) {
@@ -353,10 +350,6 @@ public class myGame extends JComponent {
 
                     //Check if tron collided with clue after he moves
                     cluWin();
-                    //If tron did collide, the method will set the true variable as 1, ending the game
-                    if (True == 1) {
-                        done = true;
-                    }
                 }
                 //CLU movement
                 //Have the clu move left thick spaces when left is pressed
@@ -367,10 +360,6 @@ public class myGame extends JComponent {
 
                     //Check if clu collided with tron
                     tronWin();
-                    if (True == 1) {
-                        //If clu did collide, the method will set the true variable as 1, ending the game
-                        done = true;
-                    }
                 }
                 //Have the clu move right thick spaces when right is pressed
                 if (cluR) {
@@ -380,10 +369,6 @@ public class myGame extends JComponent {
 
                     //Check if clu collided with tron
                     tronWin();
-                    if (True == 1) {
-                        //If clu did collide, the method will set the true variable as 1, ending the game
-                        done = true;
-                    }
                 }
                 //Have the clu move up thick spaces when up is pressed
                 if (cluU) {
@@ -393,10 +378,6 @@ public class myGame extends JComponent {
 
                     //Check if clu collided with tron
                     tronWin();
-                    if (True == 1) {
-                        //If clu did collide, the method will set the true variable as 1, ending the game
-                        done = true;
-                    }
                 }
                 //Have the clu move down thick spaces when down is pressed
                 if (cluD) {
@@ -406,12 +387,11 @@ public class myGame extends JComponent {
 
                     //Check if clu collided with tron
                     tronWin();
-                    if (True == 1) {
-                        //If clu did collide, the method will set the true variable as 1, ending the game
-                        done = true;
-                    }
                 }
+            } else {
+                resetCharacters();
             }
+
             // GAME LOGIC ENDS HERE 
             // update the drawing (calls paintComponent)
             repaint();
@@ -464,9 +444,13 @@ public class myGame extends JComponent {
         public void keyPressed(KeyEvent e) {
             //Intitalize the arrow keys
             int code = e.getKeyCode();
-            //Once the space bar is pressed, the other controls can be
-            if (code == KeyEvent.VK_SPACE) {
+            //When the enter key is pressed, and released, the game restarts
+            if (code == KeyEvent.VK_ENTER) {
+                //Reset the score for new game
+                scoreTron = 0;
+                scoreClu = 0;
                 start = true;
+                resetGame();
             }
             //Use the arrow keys for tron's movement
             if (code == KeyEvent.VK_RIGHT) {
@@ -533,30 +517,9 @@ public class myGame extends JComponent {
         // if a key has been released
         @Override
         public void keyReleased(KeyEvent e) {
-            //THERE IS NO CODE IN THE KEYRELEASED AS THIS ALLOWS THE 
-            //CHARACTERS TO CONSTANTLY BE MOVING
 
             //Intitalize the arrow keys 
             int code = e.getKeyCode();
-            //Use the arrow keys for tron's movement
-            if (code == KeyEvent.VK_RIGHT) {
-            }
-            if (code == KeyEvent.VK_LEFT) {
-            }
-            if (code == KeyEvent.VK_UP) {
-            }
-            if (code == KeyEvent.VK_DOWN) {
-            }
-
-            //Use the S,E,D,F keys to move clu
-            if (code == KeyEvent.VK_D) {
-            }
-            if (code == KeyEvent.VK_A) {
-            }
-            if (code == KeyEvent.VK_W) {
-            }
-            if (code == KeyEvent.VK_S) {
-            }
         }
     }
 
@@ -580,7 +543,13 @@ public class myGame extends JComponent {
             //check if the trial hit any part fo the walls
             if (tx[i] == WIDTH - thick || tx[i] == thick
                     || ty[i] == wallNorth.y + thick || ty[i] == wallSouth.y + thick) {
-                cluEndMenu();
+                //Add top the score
+                scoreClu++;
+                resetCharacters();
+                //call up the end menu
+                if (scoreClu == 3) {
+                    cluEndMenu();
+                }
             }
         }
         //If Clu hits the wall, clu loses and tron is told he wins
@@ -588,7 +557,13 @@ public class myGame extends JComponent {
             //check if the trial hit any part fo the walls
             if (cx[i] == WIDTH - thick || cx[i] == thick
                     || cy[i] == wallNorth.y + thick || cy[i] == wallSouth.y + thick) {
-                tronEndMenu();
+                //Add top the score
+                scoreTron++;
+                resetCharacters();
+                //call up the end menu
+                if (scoreTron == 3) {
+                    tronEndMenu();
+                }
             }
         }
     }
@@ -602,7 +577,14 @@ public class myGame extends JComponent {
             for (int j = 0; j < ci; j++) {
                 //Check if tron hit clu at it's x or y point or on the opposite side of where the x or y point is (thick)
                 if ((cx[j] == tx[i] || cx[j] == tx[i] - thick * 2) && (cy[j] == ty[i] || cy[j] == ty[i] - thick)) {
-                    tronEndMenu();
+                    //Add top the score
+                    scoreTron++;
+                    resetCharacters();
+                    //call up the end menu
+                    if (scoreTron == 3) {
+                        tronEndMenu();
+                    }
+
                 }
             }
         }
@@ -617,7 +599,13 @@ public class myGame extends JComponent {
             for (int j = 0; j < ti; j++) {
                 //Check if clu hit tron at it's x or y point or on the opposite side of where the x or y point is (thick)
                 if ((cx[i] == tx[j] || cx[i] == tx[j] - thick * 2) && (cy[i] == ty[j] || cy[i] == ty[j] - thick)) {
-                    cluEndMenu();
+                    //Add top the score
+                    scoreClu++;
+                    resetCharacters();
+                    //call up the end menu
+                    if (scoreClu == 3) {
+                        cluEndMenu();
+                    }
                 }
             }
         }
@@ -658,7 +646,13 @@ public class myGame extends JComponent {
                 if (j != i) {
                     //Check if tron of one square is  the same of another, which means he is over lapping
                     if (tx[i] == tx[j] && ty[i] == ty[j]) {
-                        cluEndMenu();
+                        //Add top the score
+                        scoreClu++;
+                        resetCharacters();
+                        //call up the end menu
+                        if (scoreClu == 3) {
+                            cluEndMenu();
+                        }
                     }
                 }
             }
@@ -676,7 +670,13 @@ public class myGame extends JComponent {
                 if (j != i) {
                     //Check if clu of one square is the same of another, which means he is over lapping
                     if (cx[i] == cx[j] && cy[i] == cy[j]) {
-                        tronEndMenu();
+                        //Add top the score
+                        scoreTron++;
+                        resetCharacters();
+                        //call up the end menu
+                        if (scoreTron == 3) {
+                            tronEndMenu();
+                        }
                     }
                 }
             }
@@ -687,6 +687,7 @@ public class myGame extends JComponent {
      * Method to erase Tron's trail after they lose
      */
     public void tronTrailBeGone() {
+        // determines when we started so we can keep a framerate
         //Set variable to go through the x and y poijnt arrays of clu backwards
         for (int i = ti; i >= 0; i--) {
             //Move the array position out of the area 
@@ -726,9 +727,14 @@ public class myGame extends JComponent {
         talkTy = HEIGHT / 2;
         //Increase the backround variable
         menux = 0;
-        //Set variable to end the game in an if loop later
-        True = 1;
+        //dissable the movement of the characters
+        start = false;
+
+        //Have person enter in thier name
+        String winner = input.nextLine();
+        PreviousWinner = winner;
     }
+
     /**
      * Method to introduce the end menu of the game if clue wins
      */
@@ -740,8 +746,72 @@ public class myGame extends JComponent {
         talkCy = HEIGHT / 2;
         //Increase the backround variable
         menux = 0;
-        //Set variable to end the game in an if loop later
-        True = 1;
+        //dissable the movement of the characters
+        start = false;
+
+        //Have person enter in thier name
+        String winner = input.nextLine();
+        PreviousWinner = winner;
+    }
+
+    /**
+     * Method to create the start environment of the game after the main menu
+     */
+    public void resetGame() {
+        //Move the start menu out of the way
+        //Change the speech quardinents
+        titlex = -1000;
+        speechX = -1000;
+        //Change the backround coorinents
+        menux = -1000;
+        //change the fcoorinantas of the boxes
+        cluTextBox.x = - 1000;
+        tronTextBox.x = -1000;
+        //change the y variable on both scores
+        scorey = 100;
+        //Take down the end menu if nessisary
+        //Create variableas for speech
+        talkTx = -1000;
+        talkTy = -1000;
+        talkCx = -1000;
+        talkCy = -1000;
+    }
+
+    /**
+     * Method to reset the character back to the start position
+     */
+    public void resetCharacters() {
+
+
+        //Reset the tron postions to the start position
+        Tron.x = WIDTH - thick * 4;
+        Tron.y = HEIGHT / 2;
+        //Reset tron to it's start position 
+        Clu.x = thick * 3;
+        Clu.y = HEIGHT / 2;
+        //go throught the positions of the tron array
+        for (int i = 0; i < ti; i++) {
+            tx[i] = Tron.x;
+            ty[i] = Tron.y;
+        }
+        //go throught the position of the clu array
+        for (int i = 0; i < ci; i++) {
+            cx[i] = Clu.x;
+            cy[i] = Clu.y;
+        }
+        //Reset array counters
+        ti = 0;
+        ci = 0;
+        //reset the booleans of the moving tof the characters
+        tronU = false;
+        tronD = false;
+        tronL = false;
+        tronR = false;
+        cluU = false;
+        cluD = false;
+        cluL = false;
+        cluR = false;
     }
 }
+    
 //Abadee badee badeee that's all folks
