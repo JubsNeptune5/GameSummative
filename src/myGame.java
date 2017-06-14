@@ -17,8 +17,8 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 
 /**
- * Tron: Two players go head to head to try to trap the other with the trail the
- * other creates If the one character hits the other character or the walls,
+ * xwing: Two players go head to head to try to trap the other with the trail
+ * the other creates If the one character hits the other character or the walls,
  * that character looses
  *
  * @author laveh2107
@@ -29,7 +29,7 @@ public class myGame extends JComponent {
     static final int WIDTH = 500;
     static final int HEIGHT = 500;
     //Title of the window
-    String title = "TRON";
+    String title = "DROID";
     // sets the framerate and delay for our game
     // you just need to select an approproate framerate
     long desiredFPS = 60;
@@ -37,38 +37,38 @@ public class myGame extends JComponent {
     // YOUR GAME VARIABLES WOULD GO HERE
     //Variables for the main menu
     //VAriables fior the rectangles for the text boxes
-    Rectangle cluTextBox = new Rectangle(0, HEIGHT / 2, WIDTH / 2 - 1, HEIGHT / 2);
-    Rectangle tronTextBox = new Rectangle(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
+    Rectangle TieTextBox = new Rectangle(0, HEIGHT / 2, WIDTH / 2 - 1, HEIGHT / 2);
+    Rectangle xWingTextBox = new Rectangle(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
     //Variables for the main game
-    //Create Colour for tron and clu
-    Color clu = new Color(232, 94, 39);
-    Color tron = new Color(40, 146, 239);
+    //Create Colour for xwing and tie fighter
+    Color tie = new Color(232, 94, 39);
+    Color xwing = new Color(40, 146, 239);
     //Create variable for thickness of everything inc. characters
     int thick = 10;
-    //Set variables for tron
-    Rectangle Tron = new Rectangle(WIDTH - thick * 4, HEIGHT / 2, thick, thick);
-    //Cretae arrays for tron coordinents
-    int tx[] = new int[WIDTH * HEIGHT];
-    int ty[] = new int[WIDTH * HEIGHT];
+    //Set variables for xwing
+    Rectangle XWing = new Rectangle(WIDTH - thick * 4, HEIGHT / 2, thick, thick);
+    //Cretae arrays for xwing coordinents
+    int wingx[] = new int[WIDTH * HEIGHT];
+    int wingy[] = new int[WIDTH * HEIGHT];
+    //Create counter for array
+    int xi = 0;
+    //Set variable for tie fighter
+    Rectangle Tie = new Rectangle(thick * 3, HEIGHT / 2, thick, thick);
+    //Create arrays for tie fighter coordinents
+    int tiex[] = new int[WIDTH * HEIGHT];
+    int tiey[] = new int[WIDTH * HEIGHT];
     //Create counter for array
     int ti = 0;
-    //Set variable for clu
-    Rectangle Clu = new Rectangle(thick * 3, HEIGHT / 2, thick, thick);
-    //Create arrays for clu coordinents
-    int cx[] = new int[WIDTH * HEIGHT];
-    int cy[] = new int[WIDTH * HEIGHT];
-    //Create counter for array
-    int ci = 0;
-    //Variables for tron's movement
-    boolean tronR = false;
-    boolean tronU = false;
-    boolean tronL = false;
-    boolean tronD = false;
-    //Variables for clu's movement
-    boolean cluR = false;
-    boolean cluU = false;
-    boolean cluL = false;
-    boolean cluD = false;
+    //Variables for xwing's movement
+    boolean xWingR = false;
+    boolean xWingU = false;
+    boolean xWingL = false;
+    boolean xWingD = false;
+    //Variables for tie fighter's movement
+    boolean TieR = false;
+    boolean TieU = false;
+    boolean TieL = false;
+    boolean TieD = false;
     //Boolean to activate once the space bar is pressed
     boolean start = false;
     //Create colour for wall outline
@@ -89,29 +89,44 @@ public class myGame extends JComponent {
     //create avriable for font for score
     Font myTalk = new Font("Impact", Font.BOLD, 10);
     //Create variableas for speech
-    int talkTx = -1000;
-    int talkTy = -1000;
-    int talkCx = -1000;
-    int talkCy = -1000;
+    int talkXwingx = -1000;
+    int talkXwingy = -1000;
+    int talkXwingiex = -1000;
+    int talkXwingiey = -1000;
     //Create variable for the start menu and end menu
     int titlex = 50;
     int speechX = 0;
     int menux = 0;
     //Create a variable for scores
-    int scoreTron = 0;
-    int scoreClu = 0;
+    int scoreXWing = 0;
+    int scoreTie = 0;
     //Create sizing variables for the score
     int scorey = -1000;
-    int scoreClux = 0;
-    int scoreTronx = WIDTH - thick * 2;
+    int scoreTiex = 0;
+    int scoreXWingx = WIDTH - thick * 2;
     //initalize the scanner
     Scanner input = new Scanner(System.in);
     //Create words for winners
     String PreviousWinner = "No previuos winner,";
+    //Create variable for speed
+    int speed = 1;
+    //Create booleans to tell the X-wing to turn
+    boolean xWingStart = false;
+    //Only one boolean becasue the xwing has four different shapes so it can follow the throster booleans  
+    //Create boolean to tell the tie wing to turn
+    boolean tieLeftRight = false;
+    boolean tieUpDown = false;
+    //Create variables for the droid bonus
+    int droidXPoint = -100;
+    int droidYPoint = -100;
+    //Create rectangle for the astromech droid
+    Rectangle droid = new Rectangle (droidXPoint,droidYPoint,thick,thick);
+    //Counter to only allow the droid to respawn once
+    int counter =1;
+    
     // GAME VARIABLES END HERE      
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
-
     public myGame() {
         // creates a windows to show my game
         JFrame frame = new JFrame(title);
@@ -152,20 +167,20 @@ public class myGame extends JComponent {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        //Create the character clu
-        g.setColor(clu);
-        g.fillRect(Clu.x, Clu.y, Clu.height, Clu.width);
-        //Create shape for the trail of clu
+        //Create the character tie fighter's throsters
+        g.setColor(tie);
+        g.fillRect(Tie.x, Tie.y, Tie.height, Tie.width);
+        //Create shape for the trail of tie fighter
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
-            g.fillRect(cx[i], cy[i], Clu.height, Clu.width);
+            g.fillRect(tiex[i], tiey[i], Tie.height, Tie.width);
         }
 
-        //Create the character tron
-        g.setColor(tron);
-        g.fillRect(Tron.x, Tron.y, Tron.height, Tron.width);
-        //Create shape for tron's trail
+        //Create the character xwing's throsters
+        g.setColor(xwing);
+        g.fillRect(XWing.x, XWing.y, XWing.height, XWing.width);
+        //Create shape for xwing's trail
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
-            g.fillRect(tx[i], ty[i], Tron.height, Tron.width);
+            g.fillRect(wingx[i], wingy[i], XWing.height, XWing.width);
         }
         //Fill the walls
         g.setColor(Color.BLACK);
@@ -182,99 +197,177 @@ public class myGame extends JComponent {
 
         //Create the wrinting for the score
         g.setFont(myScore);
-        //Set coplour specifically for clu
-        g.setColor(clu);
-        g.drawString("" + scoreClu, scoreClux, scorey);
-        g.setColor(tron);
-        g.drawString("" + scoreTron, scoreTronx, scorey);
+        //Set coplour specifically for tie fighter
+        g.setColor(tie);
+        g.drawString("" + scoreTie, scoreTiex, scorey);
+        g.setColor(xwing);
+        g.drawString("" + scoreXWing, scoreXWingx, scorey);
 
         //END game
         //Create backround for the main menu
         g.setColor(Color.BLACK);
         g.fillRect(menux, 0, WIDTH, HEIGHT);
         //Create speach to talk to the players
-        //draw winning speech for tron
+        //draw winning speech for xwing
         //Set the font
 
 
         g.setFont(myWin);
         //set the colour
-        g.setColor(tron);
-        g.drawString("Congratulations", talkTx, talkTy);
-        g.drawString("Tron, you won!!!", talkTx, talkTy + 50);
-        //draw winning speech of clu
-        g.setColor(clu);
+        g.setColor(xwing);
+        g.drawString("Congratulations", talkXwingx, talkXwingy);
+        g.drawString("X-wing, you won!!!", talkXwingx, talkXwingy + 50);
+        //draw winning speech of tie fighter
+        g.setColor(tie);
         //Set the colour
-        g.drawString("Congratulations", talkCx, talkCy);
-        g.drawString("Clu, you won!!!", talkCx, talkCy + 50);
+        g.drawString("Congratulations", talkXwingiex, talkXwingiey);
+        g.drawString("Tie fighter, you won!!!", talkXwingiex, talkXwingiey + 50);
         //Let the players knwo to restart the game if they want to play 
         g.setFont(myTalk);
-        g.drawString("press enter to play again", talkCx, talkCy + 100);
-        g.setColor(tron);
-        g.drawString("press enter to play again", talkTx, talkTy + 100);
-        g.drawString("The previous winner is: " + PreviousWinner, talkTx, talkTy + 150);
-        g.drawString("Please enter your name in the java program then press enter", talkTx, talkTy + 200);
-        g.setColor(clu);
-        g.drawString("The previous winner is: " + PreviousWinner, talkCx, talkCy + 150);
-        g.drawString("Please enter your name in the java program then press enter", talkCx, talkCy + 200);
+        g.drawString("press enter to play again", talkXwingiex, talkXwingiey + 100);
+        g.setColor(xwing);
+        g.drawString("press enter to play again", talkXwingx, talkXwingy + 100);
+        g.drawString("The previous winner is: " + PreviousWinner, talkXwingx, talkXwingy + 150);
+        g.drawString("Please enter your name in the java program then press enter", talkXwingx, talkXwingy + 200);
+        g.setColor(tie);
+        g.drawString("The previous winner is: " + PreviousWinner, talkXwingiex, talkXwingiey + 150);
+        g.drawString("Please enter your name in the java program then press enter", talkXwingiex, talkXwingiey + 200);
+
+
+        //Draw the droid power up
+        //Draw the legs
+        g.setColor(Color.WHITE);
+        g.fillRect(droid.x, droid.y+9, 3, 1);
+        g.fillRect(droid.x+1, droid.y+5, 2, 5);
+        g.fillRect(droid.x+2, droid.y+4, 6, 1);
+        g.fillRect(droid.x+7, droid.y+5, 2, 5);
+        g.fillRect(droid.x+7, droid.y+9, 3, 1);
+        //Draw the base
+        g.fillRect(droid.x+3, droid.y+1, 4, 8);
+        g.fillRect(droid.x+4,droid.y,2,1);
+        g.setColor(Color.BLUE);
+        g.fillRect(droid.x+4,droid.y+1,2,2);
+        g.fillRect(droid.x+4, droid.y+4, 2, 1);
+        g.fillRect(droid.x+4, droid.y+6, 1, 2);
+        //Draw the characters to go onto the throsters
+        //draw a x-wing face up
+        if (xWingU == true) {
+            g.setColor(Color.LIGHT_GRAY);
+            //Wings
+            g.fillRect(XWing.x, XWing.y + 7, thick, 3);
+            //Main nose
+            g.fillRect(XWing.x + 4, XWing.y, 2, thick);
+            //make blasters
+            g.drawLine(XWing.x, XWing.y + 5, XWing.x, XWing.y + 7);
+            g.drawLine(XWing.x + 9, XWing.y + 5, XWing.x + 9, XWing.y + 7);
+        }
+        if (xWingD == true) {
+            //draw a x-wing face down
+            g.setColor(Color.LIGHT_GRAY);
+            //Wings
+            g.fillRect(XWing.x, XWing.y, thick, 3);
+            //Main nose
+            g.fillRect(XWing.x + 4, XWing.y, 2, thick);
+            //make blasters
+            g.drawLine(XWing.x, XWing.y + 5, XWing.x, XWing.y);
+            g.drawLine(XWing.x + 9, XWing.y + 5, XWing.x + 9, XWing.y);
+        }
+        if (xWingR == true) {
+            //draw a x-wing face right
+            g.setColor(Color.LIGHT_GRAY);
+            //Wings
+            g.fillRect(XWing.x, XWing.y, 3, thick);
+            //Main nose
+            g.fillRect(XWing.x, XWing.y + 4, thick, 2);
+            //make blasters
+            g.drawLine(XWing.x, XWing.y, XWing.x + 5, XWing.y);
+            g.drawLine(XWing.x, XWing.y + thick, XWing.x + 5, XWing.y + thick);
+        }
+        if (xWingL == true || xWingStart == true) {
+            //draw a x-wing face left
+            g.setColor(Color.LIGHT_GRAY);
+            //Wings
+            g.fillRect(XWing.x + 7, XWing.y, 3, thick);
+            //Main nose
+            g.fillRect(XWing.x, XWing.y + 4, thick, 2);
+            //make blasters
+            g.drawLine(XWing.x + thick, XWing.y, XWing.x + 5, XWing.y);
+            g.drawLine(XWing.x + thick, XWing.y + thick, XWing.x + 5, XWing.y + thick);
+        }
+        if (tieLeftRight == true) {
+            //draw a tie fighter face right or left
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(Tie.x, Tie.y, Tie.x + thick, Tie.y);
+            g.drawLine(Tie.x, Tie.y + thick, Tie.x + thick, Tie.y + thick);
+            g.drawLine(Tie.x + 5, Tie.y, Tie.x + 5, Tie.y + thick);
+            g.fillOval(Tie.x + 3, Tie.y + 2, 5, 5);
+        }
+        if (tieUpDown == true) {
+            //draw a tie fighter face up or down
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(Tie.x, Tie.y, Tie.x, Tie.y + thick);
+            g.drawLine(Tie.x + thick, Tie.y, Tie.x + thick, Tie.y + thick);
+            g.drawLine(Tie.x, Tie.y + 5, Tie.x + thick, Tie.y + 5);
+            g.fillOval(Tie.x + 3, Tie.y + 2, 5, 5);
+        }
         //START MENU
         //Create coloured text boxes
-        //Clu's text box
+        //tie's text box
         g.setFont(myText);
-        g.setColor(clu);
-        g.drawRect(cluTextBox.x, cluTextBox.y, cluTextBox.width, cluTextBox.height);
-        //Tron's text box
-        g.setColor(tron);
-        g.drawRect(tronTextBox.x, tronTextBox.y, tronTextBox.width, tronTextBox.height);
+        g.setColor(tie);
+        g.drawRect(TieTextBox.x, TieTextBox.y, TieTextBox.width, TieTextBox.height);
+        //xwing's text box
+        g.setColor(xwing);
+        g.drawRect(xWingTextBox.x, xWingTextBox.y, xWingTextBox.width, xWingTextBox.height);
 
         //Create coloured text boxes
-        //Clus text box
-        g.setColor(clu);
-        g.drawRect(cluTextBox.x, cluTextBox.y, cluTextBox.width, cluTextBox.height);
-        //Tron's text box
-        g.setColor(tron);
-        g.drawRect(tronTextBox.x, tronTextBox.y, tronTextBox.width, tronTextBox.height);
+        //ties text box
+        g.setColor(tie);
+        g.drawRect(TieTextBox.x, TieTextBox.y, TieTextBox.width, TieTextBox.height);
+        //xwing's text box
+        g.setColor(xwing);
+        g.drawRect(xWingTextBox.x, xWingTextBox.y, xWingTextBox.width, xWingTextBox.height);
 
         //Draw the title
         g.setFont(myTitle);
-        g.setColor(tron);
-        g.drawString("TRON", titlex, 100);
+        g.setColor(xwing);
+        g.drawString("DROID", titlex, 100);
 
         //Draw in instructions
         g.setFont(myText);
         g.setColor(Color.WHITE);
-        g.drawString("The object of the game is to avoid touching the walls and the trails left behind", speechX, 150);
+        g.drawString("The object of the game is to retreive the droid by avoid touching the walls and the trails left behind", speechX, 150);
         g.drawString("by both your opponent and your own trail", speechX, 200);
         g.drawString("PRESS ENTER KEY TO CONTINUE", speechX, 250);
 
 
-        //Draw instructions for clu specifically
+        //Draw instructions for the tie fighter specifically
         //Draw blocks for letters AWSD
-        g.drawRect(cluTextBox.x + 40, 350, thick * 4, thick * 4);
-        g.drawRect(cluTextBox.x + 80, 350, thick * 4, thick * 4);
-        g.drawRect(cluTextBox.x + 70, 310, thick * 4, thick * 4);
-        g.drawRect(cluTextBox.x + 120, 350, thick * 4, thick * 4);
+        g.drawRect(TieTextBox.x + 40, 350, thick * 4, thick * 4);
+        g.drawRect(TieTextBox.x + 80, 350, thick * 4, thick * 4);
+        g.drawRect(TieTextBox.x + 70, 310, thick * 4, thick * 4);
+        g.drawRect(TieTextBox.x + 120, 350, thick * 4, thick * 4);
         //Draw in the letters to corrispond in the boxes
-        g.setColor(clu);
-        g.drawString("A", cluTextBox.x + 60, 370);
-        g.drawString("S", cluTextBox.x + 100, 370);
-        g.drawString("W", cluTextBox.x + 90, 330);
-        g.drawString("D", cluTextBox.x + 140, 370);
+        g.setColor(tie);
+        g.drawString("A", TieTextBox.x + 60, 370);
+        g.drawString("S", TieTextBox.x + 100, 370);
+        g.drawString("W", TieTextBox.x + 90, 330);
+        g.drawString("D", TieTextBox.x + 140, 370);
 
-        //Draw instructions for tron specifically
+        //Draw instructions for xwing specifically
         //Draw blocks for key pad
         //Set colour
         g.setColor(Color.WHITE);
-        g.drawRect(tronTextBox.x + 40, 350, thick * 4, thick * 4);
-        g.drawRect(tronTextBox.x + 80, 350, thick * 4, thick * 4);
-        g.drawRect(tronTextBox.x + 80, 310, thick * 4, thick * 4);
-        g.drawRect(tronTextBox.x + 120, 350, thick * 4, thick * 4);
+        g.drawRect(xWingTextBox.x + 40, 350, thick * 4, thick * 4);
+        g.drawRect(xWingTextBox.x + 80, 350, thick * 4, thick * 4);
+        g.drawRect(xWingTextBox.x + 80, 310, thick * 4, thick * 4);
+        g.drawRect(xWingTextBox.x + 120, 350, thick * 4, thick * 4);
         //Draw in the letters to corrispond in the boxes
-        g.setColor(tron);
-        g.drawString("<", tronTextBox.x + 60, 370);
-        g.drawString("!", tronTextBox.x + 100, 370);
-        g.drawString("^", tronTextBox.x + 90, 330);
-        g.drawString(">", tronTextBox.x + 140, 370);
+        g.setColor(xwing);
+        g.drawString("<", xWingTextBox.x + 60, 370);
+        g.drawString("!", xWingTextBox.x + 100, 370);
+        g.drawString("^", xWingTextBox.x + 90, 330);
+        g.drawString(">", xWingTextBox.x + 140, 370);
         // GAME DRAWING ENDS HERE
     }
     // Beets Bears Battlestar galactica
@@ -308,86 +401,107 @@ public class myGame extends JComponent {
                 //Check to see if there is any collisions
                 //Check if any character collided with the wall
                 collisionWall();
-                //Check if tron touched his own trail
-                tronTouchItself();
-                //Check if clu touched his own trail
-                cluTouchItself();
+                //Check if xwing touched his own trail
+                xWingSuicide();
+                //Check if the xwing got the droid
+                xWingCaughtDroid();
+                //Check if tie fighter touched his own trail
+                tieSuicide();
+                //Only set up the droid once
+           if(counter == 1){
+                //Do the math random method for random x and y positions from wall to wall
+             int randYPoint = (int) (Math.random() * ((wallSouth.y-thick) - (wallNorth.y+thick*2)) + 1) + (wallNorth.y+thick*2);
+             //Set x and y positions for the robot
+             droid.x = WIDTH/2;
+             droid.y = randYPoint; 
                 //TRON movement 
-                //Have the tron move left 5 spaces when left is pressed
-                if (tronL) {
-                    //Method for adding the trail to tron
-                    tronTrailAdding();
-                    Tron.x = Tron.x - 1;
+             counter--;
+            }
+                
+                //Have the xwing move left 5 spaces when left is pressed
+                if (xWingL) {
+                    //Method for adding the trail to xwing
+                    xWingThrosterAdding();
+                    XWing.x = XWing.x - speed;
 
-                    //Check if tron collided with clue after he moves
-                    cluWin();
+                    //Check if xwing collided with tie fightere after he moves
+                    empireWin();
                 }
 
-                //Have the tron move right thick spaces when right is pressed
-                if (tronR) {
-                    //Method for adding the trail to tron
-                    tronTrailAdding();
-                    Tron.x = Tron.x + 1;
+                //Have the xwing move right thick spaces when right is pressed
+                if (xWingR) {
+                    //Method for adding the trail to xwing
+                    xWingThrosterAdding();
+                    XWing.x = XWing.x + speed;
 
-                    //Check if tron collided with clue after he moves
-                    cluWin();
+                    //Check if xwing collided with tie fightere after he moves
+                    empireWin();
 
                 }
-                //Have the tron move up thick spaces when up is pressed
-                if (tronU) {
-                    //Method for adding the trail to tron
-                    tronTrailAdding();
-                    Tron.y = Tron.y - 1;
+                //Have the xwing move up thick spaces when up is pressed
+                if (xWingU) {
+                    //Method for adding the trail to xwing
+                    xWingThrosterAdding();
+                    XWing.y = XWing.y - speed;
 
-                    //Check if tron collided with clue after he moves
-                    cluWin();
+                    //Check if xwing collided with tie fightere after he moves
+                    empireWin();
                 }
-                //Have the tron move down thick spaces when down is pressed
-                if (tronD) {
-                    //Method for adding the trail to tron
-                    tronTrailAdding();
-                    Tron.y = Tron.y + 1;
+                //Have the xwing move down thick spaces when down is pressed
+                if (xWingD) {
+                    //Method for adding the trail to xwing
+                    xWingThrosterAdding();
+                    XWing.y = XWing.y + speed;
 
-                    //Check if tron collided with clue after he moves
-                    cluWin();
+                    //Check if xwing collided with tie fightere after he moves
+                    empireWin();
                 }
                 //CLU movement
-                //Have the clu move left thick spaces when left is pressed
-                if (cluL) {
-                    //Method for adding the trail to clu
-                    cluTrailAdding();
-                    Clu.x = Clu.x - 1;
+                //Have the tie fighter move left thick spaces when left is pressed
+                if (TieL) {
+                    //Method for adding the trail to tie fighter
+                    tieThrosterAdding();
+                    Tie.x = Tie.x - speed;
 
-                    //Check if clu collided with tron
-                    tronWin();
+                    //Check if tie fighter collided with xwing
+                    rebelWin();
                 }
-                //Have the clu move right thick spaces when right is pressed
-                if (cluR) {
-                    //Method for adding the trail to clu
-                    cluTrailAdding();
-                    Clu.x = Clu.x + 1;
+                //Have the tie fighter move right thick spaces when right is pressed
+                if (TieR) {
+                    //Method for adding the trail to tie fighter
+                    tieThrosterAdding();
+                    Tie.x = Tie.x + speed;
 
-                    //Check if clu collided with tron
-                    tronWin();
+                    //Check if tie fighter collided with xwing
+                    rebelWin();
                 }
-                //Have the clu move up thick spaces when up is pressed
-                if (cluU) {
-                    //Method for adding the trail to clu
-                    cluTrailAdding();
-                    Clu.y = Clu.y - 1;
+                //Have the tie fighter move up thick spaces when up is pressed
+                if (TieU) {
+                    //Make the tie face up
+                    tieUpDown = true;
+                    //Make the other boolean false to maintain shape
+                    tieLeftRight = false;
+                    //Method for adding the trail to tie fighter
+                    tieThrosterAdding();
+                    Tie.y = Tie.y - speed;
 
-                    //Check if clu collided with tron
-                    tronWin();
+                    //Check if tie fighter collided with xwing
+                    rebelWin();
                 }
-                //Have the clu move down thick spaces when down is pressed
-                if (cluD) {
-                    //Method for adding the trail to clu
-                    cluTrailAdding();
-                    Clu.y = Clu.y + 1;
+                //Have the tie fighter move down thick spaces when down is pressed
+                if (TieD) {
+                    //Make the tie face down
+                    tieUpDown = true;
+                    //Make the other boolean false to maintain shape
+                    tieLeftRight = false;
+                    //Method for adding the trail to tie fighter
+                    tieThrosterAdding();
+                    Tie.y = Tie.y + speed;
 
-                    //Check if clu collided with tron
-                    tronWin();
+                    //Check if tie fighter collided with xwing
+                    rebelWin();
                 }
+
             } else {
                 resetCharacters();
             }
@@ -410,6 +524,10 @@ public class myGame extends JComponent {
             } catch (Exception e) {
             };
         }
+    }
+
+    private BufferedImage loadImage(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     // Used to implement any of the Mouse Actions
@@ -447,70 +565,90 @@ public class myGame extends JComponent {
             //When the enter key is pressed, and released, the game restarts
             if (code == KeyEvent.VK_ENTER) {
                 //Reset the score for new game
-                scoreTron = 0;
-                scoreClu = 0;
+                scoreXWing = 0;
+                scoreTie = 0;
                 start = true;
                 resetGame();
             }
-            //Use the arrow keys for tron's movement
+            //Use the arrow keys for xwing's movement
             if (code == KeyEvent.VK_RIGHT) {
-                tronR = true;
-                //Only have tron move in a single direction by setting the booleans other than right false
-                tronU = false;
-                tronL = false;
-                tronD = false;
+                xWingR = true;
+                //Only have xwing move in a single direction by setting the booleans other than right false
+                xWingU = false;
+                xWingL = false;
+                xWingD = false;
+                xWingStart = false;
             }
             if (code == KeyEvent.VK_LEFT) {
-                tronL = true;
-                //Only have tron move in a single direction by setting the booleans other than left false
-                tronR = false;
-                tronU = false;
-                tronD = false;
+                xWingL = true;
+                //Only have xwing move in a single direction by setting the booleans other than left false
+                xWingR = false;
+                xWingU = false;
+                xWingD = false;
+                xWingStart = false;
 
             }
             if (code == KeyEvent.VK_UP) {
-                tronU = true;
-                //Only have tron move in a single direction by setting the booleans other than up false
-                tronR = false;
-                tronL = false;
-                tronD = false;
+                xWingU = true;
+                //Only have xwing move in a single direction by setting the booleans other than up false
+                xWingR = false;
+                xWingL = false;
+                xWingD = false;
+                xWingStart = false;
             }
             if (code == KeyEvent.VK_DOWN) {
-                tronD = true;
-                //Only have tron move in a single direction by setting the booleans other than down false
-                tronR = false;
-                tronU = false;
-                tronL = false;
+                xWingD = true;
+                //Only have xwing move in a single direction by setting the booleans other than down false
+                xWingR = false;
+                xWingU = false;
+                xWingL = false;
+                xWingStart = false;
             }
 
-            //Use the A,W,S,D keys to move clu
+            //Use the A,W,S,D keys to move tie fighter
             if (code == KeyEvent.VK_D) {
-                cluR = true;
-                //Only have tron move in a single direction by setting the booleans other than D false
-                cluU = false;
-                cluL = false;
-                cluD = false;
+                TieR = true;
+                //Only have xwing move in a single direction by setting the booleans other than D false
+                TieU = false;
+                TieL = false;
+                TieD = false;
+                //Make the tie face right
+                tieLeftRight = true;
+                //Make the other boolean false to maintain shape
+                tieUpDown = false;
             }
             if (code == KeyEvent.VK_A) {
-                cluL = true;
-                //Only have tron move in a single direction by setting the booleans other than A false
-                cluR = false;
-                cluU = false;
-                cluD = false;
+                TieL = true;
+                //Only have xwing move in a single direction by setting the booleans other than A false
+                TieR = false;
+                TieU = false;
+                TieD = false;
+                //Make the tie face left
+                tieLeftRight = true;
+                //Make the other boolean false to maintain shape
+                tieUpDown = false;
             }
             if (code == KeyEvent.VK_W) {
-                cluU = true;
-                //Only have tron move in a single direction by setting the booleans other than W false
-                cluR = false;
-                cluL = false;
-                cluD = false;
+                TieU = true;
+                //Only have xwing move in a single direction by setting the booleans other than W false
+                TieR = false;
+                TieL = false;
+                TieD = false;
+                //Make the tie face up
+                tieUpDown = true;
+                //Make the other boolean false to maintain shape
+                tieLeftRight = false;
             }
             if (code == KeyEvent.VK_S) {
-                cluD = true;
-                //Only have tron move in a single direction by setting the booleans other than S false
-                cluR = false;
-                cluU = false;
-                cluL = false;
+                TieD = true;
+                //Only have xwing move in a single direction by setting the booleans other than S false
+                TieR = false;
+                TieU = false;
+                TieL = false;//Make the tie face down
+                tieUpDown = true;
+                //Make the other boolean false to maintain shape
+                tieLeftRight = false;
+
             }
         }
 
@@ -533,78 +671,96 @@ public class myGame extends JComponent {
         // starts the game loop
         game.run();
     }
-
+/**
+ * Method to see if the droid was caught
+ */
+    public void xWingCaughtDroid(){
+        if(XWing.intersects(droid)){
+            resetCharacters();
+            xwingEndMenu();
+        }
+    }
+    
+    /**
+ * Method to see if the droid was caught
+ */
+    public void tieCaughtDroid(){
+        if(Tie.intersects(droid)){
+            resetCharacters();
+            tieEndMenu();
+        }
+    }
     /**
      * Method that checks if a character hits a wall
      */
     public void collisionWall() {
-        //If Tron hits a wall, tron loses and Clu is told that they won
-        for (int i = 0; i <= ci + ti; i++) {
+        //If xwing hits a wall, xwing loses and tie is told that they won
+        for (int i = 0; i <= ti + xi; i++) {
             //check if the trial hit any part fo the walls
-            if (tx[i] == WIDTH - thick || tx[i] == thick
-                    || ty[i] == wallNorth.y + thick || ty[i] == wallSouth.y + thick) {
+            if (wingx[i] == WIDTH - thick || wingx[i] == thick
+                    || wingy[i] == wallNorth.y + thick || wingy[i] == wallSouth.y + thick) {
                 //Add top the score
-                scoreClu++;
+                scoreTie++;
                 resetCharacters();
                 //call up the end menu
-                if (scoreClu == 3) {
-                    cluEndMenu();
+                if (scoreTie == 3) {
+                    tieEndMenu();
                 }
             }
         }
-        //If Clu hits the wall, clu loses and tron is told he wins
-        for (int i = 0; i <= ci + ti; i++) {
+        //If tie hits the wall, tie fighter loses and xwing is told he wins
+        for (int i = 0; i <= ti + xi; i++) {
             //check if the trial hit any part fo the walls
-            if (cx[i] == WIDTH - thick || cx[i] == thick
-                    || cy[i] == wallNorth.y + thick || cy[i] == wallSouth.y + thick) {
+            if (tiex[i] == WIDTH - thick || tiex[i] == thick
+                    || tiey[i] == wallNorth.y + thick || tiey[i] == wallSouth.y + thick) {
                 //Add top the score
-                scoreTron++;
+                scoreXWing++;
                 resetCharacters();
                 //call up the end menu
-                if (scoreTron == 3) {
-                    tronEndMenu();
+                if (scoreXWing == 3) {
+                    xwingEndMenu();
                 }
             }
         }
     }
 
     /**
-     * Method to see if Clu hit tron if so, tron won
+     * Method to see if tie hit xwing if so, xwing won
      */
-    public void tronWin() {
-        //Have two for loops to run throught and compare points form both tron and clu
-        for (int i = 0; i < ti; i++) {
-            for (int j = 0; j < ci; j++) {
-                //Check if tron hit clu at it's x or y point or on the opposite side of where the x or y point is (thick)
-                if ((cx[j] == tx[i] || cx[j] == tx[i] - thick * 2) && (cy[j] == ty[i] || cy[j] == ty[i] - thick)) {
-                    //Add top the score
-                    scoreTron++;
-                    resetCharacters();
-                    //call up the end menu
-                    if (scoreTron == 3) {
-                        tronEndMenu();
-                    }
-
-                }
-            }
-        }
-    }
-
-    /**
-     * Method to see if Tron hits Clu if so, Clue won
-     */
-    public void cluWin() {
-        //Have two for loops to run throught and compare points form both tron and clu
-        for (int i = 0; i < ci; i++) {
+    public void rebelWin() {
+        //Have two for loops to run throught and compare points form both xwing and tie fighter
+        for (int i = 0; i < xi; i++) {
             for (int j = 0; j < ti; j++) {
-                //Check if clu hit tron at it's x or y point or on the opposite side of where the x or y point is (thick)
-                if ((cx[i] == tx[j] || cx[i] == tx[j] - thick * 2) && (cy[i] == ty[j] || cy[i] == ty[j] - thick)) {
+                //Check if xwing hit tie fighter at it's x or y point or on the opposite side of where the x or y point is (thick)
+                if ((tiex[j] == wingx[i] || tiex[j] == wingx[i] - thick * 2) && (tiey[j] == wingy[i] || tiey[j] == wingy[i] - thick)) {
                     //Add top the score
-                    scoreClu++;
+                    scoreXWing++;
                     resetCharacters();
                     //call up the end menu
-                    if (scoreClu == 3) {
-                        cluEndMenu();
+                    if (scoreXWing == 3) {
+                        xwingEndMenu();
+                    }
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Method to see if xwing hits tie if so, tiee won
+     */
+    public void empireWin() {
+        //Have two for loops to run throught and compare points form both xwing and tie fighter
+        for (int i = 0; i < ti; i++) {
+            for (int j = 0; j < xi; j++) {
+                //Check if tie fighter hit xwing at it's x or y point or on the opposite side of where the x or y point is (thick)
+                if ((tiex[i] == wingx[j] || tiex[i] == wingx[j] - thick * 2) && (tiey[i] == wingy[j] || tiey[i] == wingy[j] - thick)) {
+                    //Add top the score
+                    scoreTie++;
+                    resetCharacters();
+                    //call up the end menu
+                    if (scoreTie == 3) {
+                        tieEndMenu();
                     }
                 }
             }
@@ -612,46 +768,70 @@ public class myGame extends JComponent {
     }
 
     /**
-     * Method to set the array attached to clu
+     * Method to set the array attached to tie fighter
      */
-    public void cluTrailAdding() {
-        //Set the psoition in the x points of clu array to equal the corrent x position
-        cx[ci] = Clu.x;
-        //Set the psoition in the y points of clu array to equal the corrent y position
-        cy[ci] = Clu.y;
-        //Increase the counter for the array positions
-        ci++;
-    }
-
-    /**
-     * Method to set array attached to tron
-     */
-    public void tronTrailAdding() {
-        //Set the psoition in the x points of tron array to equal the corrent x position    
-        tx[ti] = Tron.x;
-        //Set the psoition in the y points of tron array to equal the corrent y position
-        ty[ti] = Tron.y;
+    public void tieThrosterAdding() {
+        //Set the psoition in the x points of tie fighter array to equal the corrent x position
+        tiex[ti] = Tie.x;
+        //Set the psoition in the y points of tie fighter array to equal the corrent y position
+        tiey[ti] = Tie.y;
         //Increase the counter for the array positions
         ti++;
     }
 
     /**
-     * Method to check if tron crossed over its own path
+     * Method to set array attached to xwing
      */
-    public void tronTouchItself() {
-        //Have two for loops to run throught and compare points form both tron and clu
+    public void xWingThrosterAdding() {
+        //Set the psoition in the x points of xwing array to equal the corrent x position    
+        wingx[xi] = XWing.x;
+        //Set the psoition in the y points of xwing array to equal the corrent y position
+        wingy[xi] = XWing.y;
+        //Increase the counter for the array positions
+        xi++;
+    }
+
+    /**
+     * Method to check if xwing crossed over its own path
+     */
+    public void xWingSuicide() {
+        //Have two for loops to run throught and compare points form both xwing and tie fighter
+        for (int i = 0; i < xi; i++) {
+            for (int j = 0; j < xi; j++) {
+                //Do NOT allow the same square to be compared at the same time
+                if (j != i) {
+                    //Check if xwing of one square is  the same of another, which means he is over lapping
+                    if ((wingx[i] == wingx[j] && wingy[i] == wingy[j])) {
+                        //Add top the score
+                        scoreTie++;
+                        resetCharacters();
+                        //call up the end menu
+                        if (scoreTie == 3) {
+                            tieEndMenu();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Method to check if tie fighter crossed over its own path
+     */
+    public void tieSuicide() {
+        //Have two for loops to run throught and compare points form both xwing and tie fighter
         for (int i = 0; i < ti; i++) {
             for (int j = 0; j < ti; j++) {
                 //Do NOT allow the same square to be compared at the same time
                 if (j != i) {
-                    //Check if tron of one square is  the same of another, which means he is over lapping
-                    if (tx[i] == tx[j] && ty[i] == ty[j]) {
+                    //Check if tie fighter of one square is the same of another, which means he is over lapping
+                    if ((tiex[i] == tiex[j] && tiey[i] == tiey[j])) {
                         //Add top the score
-                        scoreClu++;
+                        scoreXWing++;
                         resetCharacters();
                         //call up the end menu
-                        if (scoreClu == 3) {
-                            cluEndMenu();
+                        if (scoreXWing == 3) {
+                            xwingEndMenu();
                         }
                     }
                 }
@@ -660,71 +840,47 @@ public class myGame extends JComponent {
     }
 
     /**
-     * Method to check if clu crossed over its own path
+     * Method to erase xwing's trail after they lose
      */
-    public void cluTouchItself() {
-        //Have two for loops to run throught and compare points form both tron and clu
-        for (int i = 0; i < ci; i++) {
-            for (int j = 0; j < ci; j++) {
-                //Do NOT allow the same square to be compared at the same time
-                if (j != i) {
-                    //Check if clu of one square is the same of another, which means he is over lapping
-                    if (cx[i] == cx[j] && cy[i] == cy[j]) {
-                        //Add top the score
-                        scoreTron++;
-                        resetCharacters();
-                        //call up the end menu
-                        if (scoreTron == 3) {
-                            tronEndMenu();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Method to erase Tron's trail after they lose
-     */
-    public void tronTrailBeGone() {
+    public void xWingTrailBeGone() {
         // determines when we started so we can keep a framerate
-        //Set variable to go through the x and y poijnt arrays of clu backwards
-        for (int i = ti; i >= 0; i--) {
+        //Set variable to go through the x and y poijnt arrays of tie backwards
+        for (int i = xi; i >= 0; i--) {
             //Move the array position out of the area 
-            tx[i] = 0;
-            ty[i] = 0;
+            wingx[i] = 0;
+            wingy[i] = 0;
         }
         //Move the original start square to 0
-        Tron.x = 0;
-        Tron.y = 0;
+        XWing.x = 0;
+        XWing.y = 0;
 
     }
 
     /**
-     * Method to erase Clu's trail after they lose
+     * Method to erase tie's trail after they lose
      */
-    public void cluTrailBeGone() {
-        //Set variable to go through the x and y poijnt arrays of clu backwards
-        for (int i = ci; i >= 0; i--) {
+    public void tieTrailBeGone() {
+        //Set variable to go through the x and y poijnt arrays of tie fighter backwards
+        for (int i = ti; i >= 0; i--) {
             //Move the array position out of the area
-            cx[i] = 0;
-            cy[i] = 0;
+            tiex[i] = 0;
+            tiey[i] = 0;
         }
         //Move the original start square to 0
-        Clu.x = 0;
-        Clu.y = 0;
+        Tie.x = 0;
+        Tie.y = 0;
 
     }
 
     /**
-     * Method to introduce the end menu of the game if tron wins
+     * Method to introduce the end menu of the game if xwing wins
      */
-    public void tronEndMenu() {
-        //Method to erase the trail of clu once it dies
-        cluTrailBeGone();
+    public void xwingEndMenu() {
+        //Method to erase the trail of tie fighter once it dies
+        tieTrailBeGone();
         //Increase the variables of the x/y points of the winning speech
-        talkTx = 0;
-        talkTy = HEIGHT / 2;
+        talkXwingx = 0;
+        talkXwingy = HEIGHT / 2;
         //Increase the backround variable
         menux = 0;
         //dissable the movement of the characters
@@ -736,14 +892,14 @@ public class myGame extends JComponent {
     }
 
     /**
-     * Method to introduce the end menu of the game if clue wins
+     * Method to introduce the end menu of the game if tie fightere wins
      */
-    public void cluEndMenu() {
-        //Method to erase the trail of clu once it dies
-        tronTrailBeGone();
+    public void tieEndMenu() {
+        //Method to erase the trail of tie fighter once it dies
+        xWingTrailBeGone();
         //Increase the variables of the x/y points of the winning speech
-        talkCx = 0;
-        talkCy = HEIGHT / 2;
+        talkXwingiex = 0;
+        talkXwingiey = HEIGHT / 2;
         //Increase the backround variable
         menux = 0;
         //dissable the movement of the characters
@@ -765,52 +921,61 @@ public class myGame extends JComponent {
         //Change the backround coorinents
         menux = -1000;
         //change the fcoorinantas of the boxes
-        cluTextBox.x = - 1000;
-        tronTextBox.x = -1000;
+        TieTextBox.x = - 1000;
+        xWingTextBox.x = -1000;
         //change the y variable on both scores
         scorey = 100;
         //Take down the end menu if nessisary
         //Create variableas for speech
-        talkTx = -1000;
-        talkTy = -1000;
-        talkCx = -1000;
-        talkCy = -1000;
+        talkXwingx = -1000;
+        talkXwingy = -1000;
+        talkXwingiex = -1000;
+        talkXwingiey = -1000;
+        
     }
 
     /**
      * Method to reset the character back to the start position
      */
     public void resetCharacters() {
+//Reset the booleans to start the characters
+        boolean tieLeftRight = true;
+        boolean xWingStart = true;
 
-
-        //Reset the tron postions to the start position
-        Tron.x = WIDTH - thick * 4;
-        Tron.y = HEIGHT / 2;
-        //Reset tron to it's start position 
-        Clu.x = thick * 3;
-        Clu.y = HEIGHT / 2;
-        //go throught the positions of the tron array
-        for (int i = 0; i < ti; i++) {
-            tx[i] = Tron.x;
-            ty[i] = Tron.y;
+        //Reset the xwing postions to the start position
+        XWing.x = WIDTH - thick * 4;
+        XWing.y = HEIGHT / 2;
+        //Reset xwing to it's start position 
+        Tie.x = thick * 3;
+        Tie.y = HEIGHT / 2;
+        //go throught the positions of the xwing array
+        for (int i = 0; i < xi; i++) {
+            wingx[i] = XWing.x;
+            wingy[i] = XWing.y;
         }
-        //go throught the position of the clu array
-        for (int i = 0; i < ci; i++) {
-            cx[i] = Clu.x;
-            cy[i] = Clu.y;
+        //go throught the position of the tie fighter array
+        for (int i = 0; i < ti; i++) {
+            tiex[i] = Tie.x;
+            tiey[i] = Tie.y;
         }
         //Reset array counters
+        xi = 0;
         ti = 0;
-        ci = 0;
         //reset the booleans of the moving tof the characters
-        tronU = false;
-        tronD = false;
-        tronL = false;
-        tronR = false;
-        cluU = false;
-        cluD = false;
-        cluL = false;
-        cluR = false;
+        xWingU = false;
+        xWingD = false;
+        xWingL = false;
+        xWingR = false;
+        TieU = false;
+        TieD = false;
+        TieL = false;
+        TieR = false;
+        //Resetr the droid position
+        droid.x =-100;
+        droid.y =-100;
+        
+        //Reset the counter for the droid
+        counter=1;
     }
 }
     
