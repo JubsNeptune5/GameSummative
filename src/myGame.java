@@ -41,19 +41,19 @@ public class myGame extends JComponent {
     Rectangle xWingTextBox = new Rectangle(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
     //Variables for the main game
     //Create Colour for xwing and tie fighter
-    Color tie = new Color(232, 94, 39);
-    Color xwing = new Color(40, 146, 239);
+    Color tie = new Color(101, 209, 98);
+    Color xwing = new Color(214, 27, 27);
     //Create variable for thickness of everything inc. characters
     int thick = 10;
     //Set variables for xwing
-    Rectangle XWing = new Rectangle(WIDTH - thick * 4, HEIGHT / 2, thick, thick);
+    Rectangle XWing = new Rectangle(450, 450, thick, thick);
     //Cretae arrays for xwing coordinents
     int wingx[] = new int[WIDTH * HEIGHT];
     int wingy[] = new int[WIDTH * HEIGHT];
     //Create counter for array
     int xi = 0;
     //Set variable for tie fighter
-    Rectangle Tie = new Rectangle(thick * 3, HEIGHT / 2, thick, thick);
+    Rectangle Tie = new Rectangle(50, 50, thick, thick);
     //Create arrays for tie fighter coordinents
     int tiex[] = new int[WIDTH * HEIGHT];
     int tiey[] = new int[WIDTH * HEIGHT];
@@ -69,8 +69,12 @@ public class myGame extends JComponent {
     boolean TieU = false;
     boolean TieL = false;
     boolean TieD = false;
-    //Boolean to activate once the space bar is pressed
+    //Boolean to activate once the enter space is pressed
     boolean start = false;
+    //Create colour for the planet surface
+    Color surface = new Color(150, 102, 51);
+    //Create color for planet oceans
+    Color Ocean = new Color(109, 173, 219);
     //Create colour for wall outline
     Color Lukelightsaber = new Color(180, 200, 232);
     //Variables for the walls
@@ -120,10 +124,10 @@ public class myGame extends JComponent {
     int droidXPoint = -100;
     int droidYPoint = -100;
     //Create rectangle for the astromech droid
-    Rectangle droid = new Rectangle (droidXPoint,droidYPoint,thick,thick);
+    Rectangle droid = new Rectangle(droidXPoint, droidYPoint, thick, thick);
     //Counter to only allow the droid to respawn once
-    int counter =1;
-    
+    int counter = 1;
+
     // GAME VARIABLES END HERE      
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
@@ -166,6 +170,18 @@ public class myGame extends JComponent {
         //Create backround for the game
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+        //Create death star for game start
+        g.setColor(Color.DARK_GRAY);
+        g.fillOval(0, 0, 200, 200);
+        g.setColor(Color.GRAY);
+        g.fillOval(125, 25, 50, 75);
+        //Creat planet
+        g.setColor(Ocean);
+        g.fillOval(300, 300, 400, 400);
+        g.setColor(surface);
+        g.fillRect(350, 400, 50, 100);
+        g.fillRect(400, 450, 100, 500);
+        g.fillRect(450, 320, 50, 100);
 
         //Create the character tie fighter's throsters
         g.setColor(tie);
@@ -227,28 +243,23 @@ public class myGame extends JComponent {
         g.drawString("press enter to play again", talkXwingiex, talkXwingiey + 100);
         g.setColor(xwing);
         g.drawString("press enter to play again", talkXwingx, talkXwingy + 100);
-        g.drawString("The previous winner is: " + PreviousWinner, talkXwingx, talkXwingy + 150);
-        g.drawString("Please enter your name in the java program then press enter", talkXwingx, talkXwingy + 200);
-        g.setColor(tie);
-        g.drawString("The previous winner is: " + PreviousWinner, talkXwingiex, talkXwingiey + 150);
-        g.drawString("Please enter your name in the java program then press enter", talkXwingiex, talkXwingiey + 200);
 
 
         //Draw the droid power up
         //Draw the legs
         g.setColor(Color.WHITE);
-        g.fillRect(droid.x, droid.y+9, 3, 1);
-        g.fillRect(droid.x+1, droid.y+5, 2, 5);
-        g.fillRect(droid.x+2, droid.y+4, 6, 1);
-        g.fillRect(droid.x+7, droid.y+5, 2, 5);
-        g.fillRect(droid.x+7, droid.y+9, 3, 1);
+        g.fillRect(droid.x, droid.y + 9, 3, 1);
+        g.fillRect(droid.x + 1, droid.y + 5, 2, 5);
+        g.fillRect(droid.x + 2, droid.y + 4, 6, 1);
+        g.fillRect(droid.x + 7, droid.y + 5, 2, 5);
+        g.fillRect(droid.x + 7, droid.y + 9, 3, 1);
         //Draw the base
-        g.fillRect(droid.x+3, droid.y+1, 4, 8);
-        g.fillRect(droid.x+4,droid.y,2,1);
+        g.fillRect(droid.x + 3, droid.y + 1, 4, 8);
+        g.fillRect(droid.x + 4, droid.y, 2, 1);
         g.setColor(Color.BLUE);
-        g.fillRect(droid.x+4,droid.y+1,2,2);
-        g.fillRect(droid.x+4, droid.y+4, 2, 1);
-        g.fillRect(droid.x+4, droid.y+6, 1, 2);
+        g.fillRect(droid.x + 4, droid.y + 1, 2, 2);
+        g.fillRect(droid.x + 4, droid.y + 4, 2, 1);
+        g.fillRect(droid.x + 4, droid.y + 6, 1, 2);
         //Draw the characters to go onto the throsters
         //draw a x-wing face up
         if (xWingU == true) {
@@ -408,16 +419,16 @@ public class myGame extends JComponent {
                 //Check if tie fighter touched his own trail
                 tieSuicide();
                 //Only set up the droid once
-           if(counter == 1){
-                //Do the math random method for random x and y positions from wall to wall
-             int randYPoint = (int) (Math.random() * ((wallSouth.y-thick) - (wallNorth.y+thick*2)) + 1) + (wallNorth.y+thick*2);
-             //Set x and y positions for the robot
-             droid.x = WIDTH/2;
-             droid.y = randYPoint; 
-                //TRON movement 
-             counter--;
-            }
-                
+                if (counter == 1) {
+                    //Do the math random method for random x and y positions from wall to wall
+                    int randYPoint = (int) (Math.random() * ((wallSouth.y - thick) - (wallNorth.y + thick * 2)) + 1) + (wallNorth.y + thick * 2);
+                    //Set x and y positions for the robot
+                    droid.x = WIDTH / 2;
+                    droid.y = randYPoint;
+                    //TRON movement 
+                    counter--;
+                }
+
                 //Have the xwing move left 5 spaces when left is pressed
                 if (xWingL) {
                     //Method for adding the trail to xwing
@@ -658,6 +669,9 @@ public class myGame extends JComponent {
 
             //Intitalize the arrow keys 
             int code = e.getKeyCode();
+            if (code == KeyEvent.VK_ENTER) {
+                start = true;
+            }
         }
     }
 
@@ -671,25 +685,27 @@ public class myGame extends JComponent {
         // starts the game loop
         game.run();
     }
-/**
- * Method to see if the droid was caught
- */
-    public void xWingCaughtDroid(){
-        if(XWing.intersects(droid)){
+
+    /**
+     * Method to see if the droid was caught
+     */
+    public void xWingCaughtDroid() {
+        if (XWing.intersects(droid)) {
             resetCharacters();
             xwingEndMenu();
         }
     }
-    
+
     /**
- * Method to see if the droid was caught
- */
-    public void tieCaughtDroid(){
-        if(Tie.intersects(droid)){
+     * Method to see if the droid was caught
+     */
+    public void tieCaughtDroid() {
+        if (Tie.intersects(droid)) {
             resetCharacters();
             tieEndMenu();
         }
     }
+
     /**
      * Method that checks if a character hits a wall
      */
@@ -885,10 +901,6 @@ public class myGame extends JComponent {
         menux = 0;
         //dissable the movement of the characters
         start = false;
-
-        //Have person enter in thier name
-        String winner = input.nextLine();
-        PreviousWinner = winner;
     }
 
     /**
@@ -904,10 +916,6 @@ public class myGame extends JComponent {
         menux = 0;
         //dissable the movement of the characters
         start = false;
-
-        //Have person enter in thier name
-        String winner = input.nextLine();
-        PreviousWinner = winner;
     }
 
     /**
@@ -931,7 +939,7 @@ public class myGame extends JComponent {
         talkXwingy = -1000;
         talkXwingiex = -1000;
         talkXwingiey = -1000;
-        
+
     }
 
     /**
@@ -943,11 +951,11 @@ public class myGame extends JComponent {
         boolean xWingStart = true;
 
         //Reset the xwing postions to the start position
-        XWing.x = WIDTH - thick * 4;
-        XWing.y = HEIGHT / 2;
+        XWing.x = 450;
+        XWing.y = 450;
         //Reset xwing to it's start position 
-        Tie.x = thick * 3;
-        Tie.y = HEIGHT / 2;
+        Tie.x = 50;
+        Tie.y = 50;
         //go throught the positions of the xwing array
         for (int i = 0; i < xi; i++) {
             wingx[i] = XWing.x;
@@ -971,11 +979,10 @@ public class myGame extends JComponent {
         TieL = false;
         TieR = false;
         //Resetr the droid position
-        droid.x =-100;
-        droid.y =-100;
-        
+        droid.x = -100;
+        droid.y = -100;
         //Reset the counter for the droid
-        counter=1;
+        counter = 1;
     }
 }
     
