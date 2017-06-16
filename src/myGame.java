@@ -79,7 +79,7 @@ public class myGame extends JComponent {
     Color Lukelightsaber = new Color(180, 200, 232);
     //Variables for the walls
     Rectangle wallNorth = new Rectangle(0, 0, thick * 2, WIDTH);
-    Rectangle wallEast = new Rectangle(WIDTH - thick * 2, 0, HEIGHT, thick * 2);
+    Rectangle wallEast = new Rectangle(WIDTH - thick * 2, 0, HEIGHT, thick *3);
     Rectangle wallSouth = new Rectangle(0, HEIGHT - thick * 2, thick * 2, WIDTH);
     Rectangle wallWest = new Rectangle(0, 0, HEIGHT, thick * 2);
     //Create variable for font for title
@@ -175,7 +175,7 @@ public class myGame extends JComponent {
         g.fillOval(0, 0, 200, 200);
         g.setColor(Color.GRAY);
         g.fillOval(125, 25, 50, 75);
-        //Creat planet
+        //Create planet
         g.setColor(Ocean);
         g.fillOval(300, 300, 400, 400);
         g.setColor(surface);
@@ -198,68 +198,7 @@ public class myGame extends JComponent {
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             g.fillRect(wingx[i], wingy[i], XWing.height, XWing.width);
         }
-        //Fill the walls
-        g.setColor(Color.BLACK);
-        g.fillRect(wallNorth.x, wallNorth.y, wallNorth.height, wallNorth.width);
-        g.fillRect(wallSouth.x, wallSouth.y, wallSouth.height, wallSouth.width);
-        g.fillRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
-        g.fillRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
-        //Draw the outline
-        g.setColor(Lukelightsaber);
-        g.drawRect(wallNorth.x, wallNorth.y, wallNorth.height, wallNorth.width);
-        g.drawRect(wallSouth.x, wallSouth.y, wallSouth.height, wallSouth.width);
-        g.drawRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
-        g.drawRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
 
-        //Create the wrinting for the score
-        g.setFont(myScore);
-        //Set coplour specifically for tie fighter
-        g.setColor(tie);
-        g.drawString("" + scoreTie, scoreTiex, scorey);
-        g.setColor(xwing);
-        g.drawString("" + scoreXWing, scoreXWingx, scorey);
-
-        //END game
-        //Create backround for the main menu
-        g.setColor(Color.BLACK);
-        g.fillRect(menux, 0, WIDTH, HEIGHT);
-        //Create speach to talk to the players
-        //draw winning speech for xwing
-        //Set the font
-
-
-        g.setFont(myWin);
-        //set the colour
-        g.setColor(xwing);
-        g.drawString("Congratulations", talkXwingx, talkXwingy);
-        g.drawString("X-wing, you won!!!", talkXwingx, talkXwingy + 50);
-        //draw winning speech of tie fighter
-        g.setColor(tie);
-        //Set the colour
-        g.drawString("Congratulations", talkXwingiex, talkXwingiey);
-        g.drawString("Tie fighter, you won!!!", talkXwingiex, talkXwingiey + 50);
-        //Let the players knwo to restart the game if they want to play 
-        g.setFont(myTalk);
-        g.drawString("press enter to play again", talkXwingiex, talkXwingiey + 100);
-        g.setColor(xwing);
-        g.drawString("press enter to play again", talkXwingx, talkXwingy + 100);
-
-
-        //Draw the droid power up
-        //Draw the legs
-        g.setColor(Color.WHITE);
-        g.fillRect(droid.x, droid.y + 9, 3, 1);
-        g.fillRect(droid.x + 1, droid.y + 5, 2, 5);
-        g.fillRect(droid.x + 2, droid.y + 4, 6, 1);
-        g.fillRect(droid.x + 7, droid.y + 5, 2, 5);
-        g.fillRect(droid.x + 7, droid.y + 9, 3, 1);
-        //Draw the base
-        g.fillRect(droid.x + 3, droid.y + 1, 4, 8);
-        g.fillRect(droid.x + 4, droid.y, 2, 1);
-        g.setColor(Color.BLUE);
-        g.fillRect(droid.x + 4, droid.y + 1, 2, 2);
-        g.fillRect(droid.x + 4, droid.y + 4, 2, 1);
-        g.fillRect(droid.x + 4, droid.y + 6, 1, 2);
         //Draw the characters to go onto the throsters
         //draw a x-wing face up
         if (xWingU == true) {
@@ -321,6 +260,70 @@ public class myGame extends JComponent {
             g.drawLine(Tie.x, Tie.y + 5, Tie.x + thick, Tie.y + 5);
             g.fillOval(Tie.x + 3, Tie.y + 2, 5, 5);
         }
+
+        //Fill the walls
+        g.setColor(Color.BLACK);
+        g.fillRect(wallNorth.x, wallNorth.y, wallNorth.height, wallNorth.width);
+        g.fillRect(wallSouth.x, wallSouth.y, wallSouth.height, wallSouth.width);
+        g.fillRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
+        g.fillRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
+        //Draw the outline
+        g.setColor(Lukelightsaber);
+        g.drawRect(wallNorth.x, wallNorth.y, wallNorth.height, wallNorth.width);
+        g.drawRect(wallSouth.x, wallSouth.y, wallSouth.height, wallSouth.width);
+        g.drawRect(wallEast.x, wallEast.y, wallEast.height, wallEast.width);
+        g.drawRect(wallWest.x, wallWest.y, wallWest.height, wallWest.width);
+
+
+        //Create the wrinting for the score
+        g.setColor(tie);
+        g.setFont(myScore);
+        g.drawString("" + scoreTie, scoreTiex, scorey);
+        g.setColor(xwing);
+        g.drawString("" + scoreXWing, scoreXWingx, scorey);
+
+        //END game
+        //Create backround for the main menu
+        g.setColor(Color.BLACK);
+        g.fillRect(menux, 0, WIDTH, HEIGHT);
+        //Create speach to talk to the players
+        //draw winning speech for xwing
+        //Set the font
+
+
+        g.setFont(myWin);
+        //set the colour
+        g.setColor(xwing);
+        g.drawString("Congratulations", talkXwingx, talkXwingy);
+        g.drawString("X-wing, you won!!!", talkXwingx, talkXwingy + 50);
+        //draw winning speech of tie fighter
+        g.setColor(tie);
+        //Set the colour
+        g.drawString("Congratulations", talkXwingiex, talkXwingiey);
+        g.drawString("Tie fighter, you won!!!", talkXwingiex, talkXwingiey + 50);
+        //Let the players knwo to restart the game if they want to play 
+        g.setFont(myTalk);
+        g.drawString("press enter to play again", talkXwingiex, talkXwingiey + 100);
+        g.setColor(xwing);
+        g.drawString("press enter to play again", talkXwingx, talkXwingy + 100);
+
+
+        //Draw the droid power up
+        //Draw the legs
+        g.setColor(Color.WHITE);
+        g.fillRect(droid.x, droid.y + 9, 3, 1);
+        g.fillRect(droid.x + 1, droid.y + 5, 2, 5);
+        g.fillRect(droid.x + 2, droid.y + 4, 6, 1);
+        g.fillRect(droid.x + 7, droid.y + 5, 2, 5);
+        g.fillRect(droid.x + 7, droid.y + 9, 3, 1);
+        //Draw the base
+        g.fillRect(droid.x + 3, droid.y + 1, 4, 8);
+        g.fillRect(droid.x + 4, droid.y, 2, 1);
+        g.setColor(Color.BLUE);
+        g.fillRect(droid.x + 4, droid.y + 1, 2, 2);
+        g.fillRect(droid.x + 4, droid.y + 4, 2, 1);
+        g.fillRect(droid.x + 4, droid.y + 6, 1, 2);
+
         //START MENU
         //Create coloured text boxes
         //tie's text box
@@ -396,6 +399,9 @@ public class myGame extends JComponent {
         long startTime;
         long deltaTime;
 
+        //Shootdelay for 10 seconds
+        long shootDelay = System.currentTimeMillis() + 5000;
+
         preSetup();
 
         // the main game loop section
@@ -414,8 +420,9 @@ public class myGame extends JComponent {
                 collisionWall();
                 //Check if xwing touched his own trail
                 xWingSuicide();
-                //Check if the xwing got the droid
+                //Check if the CHARACTERS got the droid
                 xWingCaughtDroid();
+                tieCaughtDroid();
                 //Check if tie fighter touched his own trail
                 tieSuicide();
                 //Only set up the droid once
@@ -671,6 +678,15 @@ public class myGame extends JComponent {
             int code = e.getKeyCode();
             if (code == KeyEvent.VK_ENTER) {
                 start = true;
+            }
+            //Create cheat code that isnt in th3e instructins
+            if (code == KeyEvent.VK_BACK_SPACE) {
+                //Make the droid closer to x-wing
+                droid.x = droid.x + 2;
+            }
+            if (code == KeyEvent.VK_CAPS_LOCK) {
+                //Make the droid closer to the tie
+                droid.x = droid.x - 2;
             }
         }
     }
